@@ -30,6 +30,14 @@ else
   exit 1
 fi
 
+sed -i "" -e "s/A template for LOOOP service repositories/${desc}/g" package.json >/dev/null
+if [ $? -eq 0 ]; then
+  printf "${bgreen}${tick} ${bold}Changed project description in ${bcyan}package.json${bold}.\n"
+else
+  printf "${bred}${cross} ${bold}Could not edit ${bcyan}package.json${bold}.\n"
+  exit 1
+fi
+
 # git rm --cached setup.sh >/dev/null
 # if [ $? -eq 0 ]; then
 #   printf "${bgreen}${tick} ${bold}Removed ${bcyan}setup.sh${bold} from Git\n"
