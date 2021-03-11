@@ -25,3 +25,9 @@ Here is a list of all directories and files contained in this repository and bri
 - [TypeScript](https://www.npmjs.com/package/typescript) &mdash; used for adding static typing to JavaScript.
 - [Jest](https://www.npmjs.com/package/jest) &mdash; used for testing (or more specifically, [ts-jest](https://www.npmjs.com/package/ts-jest)).
 - [ESLint](https://www.npmjs.com/package/eslint) &mdash; used for linting.
+
+## GitHub Actions
+
+There are two GitHub actions provided:
+- [`lint-and-test.yml`](.github/workflows/lint-and-test.yml) &mdash; runs linting checks using ESLint, and runs tests defined in `src/*.test.ts` files using Jest. Runs on a push to any branch.
+- [`publish.yml`](.github/workflows/publish.yml) &mdash; builds the service using Webpack, zips the output, and uploads the zip to the `looop-artefacts` S3 bucket. Runs on a push to the `main` branch.
