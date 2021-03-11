@@ -22,12 +22,20 @@ read desc
 
 printf "\n"
 
-ls >/dev/null
+sed -i "" -e "s/service-template/${name}/g" package.json >/dev/null
 if [ $? -eq 0 ]; then
-  printf "${bgreen}${tick} ${bold}check mark\n"
+  printf "${bgreen}${tick} ${bold}Changed project name, repository URL, and homepage URL in ${bcyan}package.json${bold}.\n"
 else
-  printf "${bred}${cross} ${bold}cross\n"
+  printf "${bred}${cross} ${bold}Could not edit ${bcyan}package.json${bold}.\n"
   exit 1
 fi
+
+# git rm --cached setup.sh >/dev/null
+# if [ $? -eq 0 ]; then
+#   printf "${bgreen}${tick} ${bold}Removed ${bcyan}setup.sh${bold} from Git\n"
+# else
+#   printf "${bred}${cross} ${bold}cross\n"
+#   exit 1
+# fi
 
 printf "\n"
