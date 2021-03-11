@@ -2,6 +2,16 @@
 
 A template for LOOOP service repositories.
 
+## Usage
+
+First, update [`.github/workflows`](.github/workflows), [`package.json`](package.json) and [`README.md`](README.md) using the provided interactive helper script:
+
+```
+npm run setup
+```
+
+You can then `git commit` and `git push` and begin using the repository normally.
+
 ## Repository Structure
 
 Here is a list of all directories and files contained in this repository and brief descriptions of what they are for:
