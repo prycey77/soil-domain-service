@@ -6,18 +6,19 @@
     "lint": "eslint . --ext ts,tsx && npx prettier -c '**/*.(js|json)'",
     "prettier": "npx prettier -w '**/*.(js|json)'",
     "test": "npx jest",
-    "build": "webpack"
+    "build": "webpack",
+    "setup": "source setup.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BxLooop/service-template.git"
+    "url": "git+https://github.com/Bx-LOOOP/service-template.git"
   },
   "author": "Bx",
   "license": "ISC",
   "bugs": {
     "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
   },
-  "homepage": "https://github.com/BxLooop/service-template#readme",
+  "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
