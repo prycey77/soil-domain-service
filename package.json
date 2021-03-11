@@ -1,10 +1,7 @@
 {
-  "name": "typescript-template",
+  "name": "service-template",
   "version": "0.1.0",
-  "description": "A template for LOOOP TypeScript repositories",
-  "directories": {
-    "test": "test"
-  },
+  "description": "A template for LOOOP service repositories",
   "scripts": {
     "lint": "eslint . --ext ts,tsx && npx prettier -c '**/*.(js|json)'",
     "prettier": "npx prettier -w '**/*.(js|json)'",
@@ -13,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BxLooop/typescript-template.git"
+    "url": "git+https://github.com/BxLooop/service-template.git"
   },
   "author": "Bx",
   "license": "ISC",
   "bugs": {
     "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
   },
-  "homepage": "https://github.com/BxLooop/typescript-template#readme",
+  "homepage": "https://github.com/BxLooop/service-template#readme",
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
