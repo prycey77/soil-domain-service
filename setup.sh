@@ -9,6 +9,21 @@ bcyan='\033[1;36m'        # Bold cyan
 
 tick='\xE2\x9C\x94'
 cross='\xE2\x9C\x98'
+asterisk='\xE2\x9C\xA4'
+
+readme_template="## Development
+
+## Building
+
+## Deployment
+
+## Issues
+
+## Monitoring
+
+## Team
+
+## Dependencies"
 
 printf "${bold}This script will edit the ${bcyan}.github/workflows/publish.yml${bold}, \
 ${bcyan}package.json${bold}, and ${bcyan}README.md${bold} files.\n\n"
@@ -38,12 +53,28 @@ else
   exit 1
 fi
 
-# git rm --cached setup.sh >/dev/null
-# if [ $? -eq 0 ]; then
-#   printf "${bgreen}${tick} ${bold}Removed ${bcyan}setup.sh${bold} from Git\n"
-# else
-#   printf "${bred}${cross} ${bold}cross\n"
-#   exit 1
-# fi
+printf "# ${title}\n\n${desc}\n\n${readme_template}" > README.md
+if [ $? -eq 0 ]; then
+  printf "${bgreen}${tick} ${bold}Updated and cleaned up ${bcyan}README.md${bold}.\n"
+else
+  printf "${bred}${cross} ${bold}Could not edit ${bcyan}README.md${bold}.\n"
+  exit 1
+fi
 
-printf "\n"
+sed -i "" -e "s/_SERVICE_NAME_/${name}/g" .github/workflows/publish.yml >/dev/null
+if [ $? -eq 0 ]; then
+  printf "${bgreen}${tick} ${bold}Changed S3 bucket folder and zip file name in ${bcyan}.github/workflows/publish.yml${bold}.\n"
+else
+  printf "${bred}${cross} ${bold}Could not edit ${bcyan}.github/workflows/publish.yml${bold}.\n"
+  exit 1
+fi
+
+git rm --cached setup.sh >/dev/null
+if [ $? -eq 0 ]; then
+  printf "${bgreen}${tick} ${bold}Removed ${bcyan}setup.sh${bold} from Git\n"
+else
+  printf "${bred}${cross} ${bold}cross\n"
+  exit 1
+fi
+
+printf "\n${bgreen}${asterisk} ${bold}All done. You can now commit and push!\n\n"
