@@ -1,6 +1,6 @@
 # This file defines a simple linting workflow that will be used by GitHub Actions
 
-name: lint-and-test
+name: Lint and test
 
 # Controls when the action will run. 
 on:
