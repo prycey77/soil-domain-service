@@ -1,5 +1,5 @@
-import * as hello from "./service";
+import { uploadSoilSampleToDdb } from "./service";
 
-test("Hello World test", () => {
-  expect(hello.helloWorld()).toEqual("Hello, World!");
+test("Upload Soil Sample Lambda Test", () => {
+  uploadSoilSampleToDdb({} as any, {} as any, () => {});
 });

@@ -24,6 +24,7 @@ const uploadSoilSampleToDdb: S3Handler = async (event) => {
     console.log(`Data:::${dataString}`);
 
     await dynamoLoader("eurofins-monitor-results", dataJson);
+    console.log("Success!");
   } catch (error) {
     throw new Error("Error adding data");
   }
