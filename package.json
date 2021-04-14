@@ -1,7 +1,7 @@
 {
-  "name": "service-template",
+  "name": "soil-domain-service",
   "version": "0.1.0",
-  "description": "A template for LOOOP service repositories",
+  "description": "Domain service for soil samples",
   "scripts": {
     "lint": "eslint . --ext ts,tsx && npx prettier -c '**/*.(js|json)'",
     "prettier": "npx prettier -w '**/*.(js|json)'",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bx-LOOOP/service-template.git"
+    "url": "git+https://github.com/Bx-LOOOP/soil-domain-service.git"
   },
   "author": "Bx",
   "license": "ISC",
   "bugs": {
     "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
   },
-  "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
+  "homepage": "https://github.com/Bx-LOOOP/soil-domain-service#readme",
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"

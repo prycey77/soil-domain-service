@@ -47,4 +47,4 @@ jobs:
           aws-region: eu-west-2
 
       - name: Copy Zip File to looop-artefacts
-        run: aws s3 cp bundle.zip s3://looop-artefacts/_SERVICE_NAME_/_SERVICE_NAME_-0.1.0+${GITHUB_RUN_NUMBER}.zip
+        run: aws s3 cp bundle.zip s3://looop-artefacts/soil-domain-service/soil-domain-service-0.1.0+${GITHUB_RUN_NUMBER}.zip
