@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.tabSize": 2,
+  "cSpell.language": "en-GB",
+  "cSpell.words": ["Bardsley"]
+}
