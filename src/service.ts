@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import { S3Handler } from "aws-lambda";
-import AWS from "aws-sdk";
 import { dynamoLoader } from "./ddbLoader";
-
-const s3 = new AWS.S3();
+import { getS3Data } from "./getS3Object";
 
 const uploadSoilSampleToDdb: S3Handler = async (event) => {
+  console.log(`This is the event: ${JSON.stringify(event)}`);
   const { name } = event.Records[0].s3.bucket;
   const { key } = event.Records[0].s3.object;
 
@@ -15,18 +14,13 @@ const uploadSoilSampleToDdb: S3Handler = async (event) => {
   };
 
   try {
-    const s3Data = await s3.getObject(getObjparams).promise();
-    if (s3Data.Body === undefined) {
-      throw new Error("S3 data body is undefined");
-    }
-    const dataString = s3Data.Body.toString();
-    const dataJson = JSON.parse(dataString);
-    console.log(`Data:::${dataString}`);
-
+    const dataJson = await getS3Data(getObjparams);
+    console.log(`This is returned from getS3Data: ${dataJson}`);
     await dynamoLoader("eurofins-monitor-results", dataJson);
+    console.log(`This is the ddb function: ${dynamoLoader("eurofins-monitor-results", dataJson)}`);
     console.log("Success!");
   } catch (error) {
-    throw new Error("Error adding data");
+    throw new Error(`Error adding data: ${error}`);
   }
 };
 

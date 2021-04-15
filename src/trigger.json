@@ -1,0 +1,39 @@
+
+{
+  "Records": [
+      {
+          "eventVersion": "2.1",
+          "eventSource": "aws:s3",
+          "awsRegion": "eu-west-2",
+          "eventTime": "2021-04-15T14:06:51.007Z",
+          "eventName": "ObjectCreated:Put",
+          "userIdentity": {
+              "principalId": "AWS:AROAQJMLKSQE5EVTKCJRV:richard.pryce@bardsley-england.com"
+          },
+          "requestParameters": {
+              "sourceIPAddress": "80.3.68.152"
+          },
+          "responseElements": {
+              "x-amz-request-id": "MHDGFT0FPRQD5B2D",
+              "x-amz-id-2": "bSrRfPYIy/csOqi3oGYaG8IP0idVEekM/SzxHrYk/h4o4aGZvnh+tKggpL7Twj/RWx9fUk5dMWeVbz4mRca/JLt9Qyz/ShvZ"
+          },
+          "s3": {
+              "s3SchemaVersion": "1.0",
+              "configurationId": "0f60ce7e-2585-460f-9779-3fbb27b4e02b",
+              "bucket": {
+                  "name": "eurofins-monitor-results",
+                  "ownerIdentity": {
+                      "principalId": "AW0PHDL1JXGVV"
+                  },
+                  "arn": "arn:aws:s3:::eurofins-monitor-results"
+              },
+              "object": {
+                  "key": "more-results.json",
+                  "size": 385443,
+                  "eTag": "0e8291df6a75268a01cd98641dcccfcd",
+                  "sequencer": "006078487BCB14F7A3"
+              }
+          }
+      }
+  ]
+}
