@@ -29,9 +29,9 @@ function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunc
 
 const getS3DataMock = mockFunction(getS3Data);
 const dynamoLoaderMock = mockFunction(dynamoLoader);
+const event: S3Event = bodyJson as any;
 
 test("DynamoDB is succesfully called", async () => {
-  const event: S3Event = bodyJson as any;
   getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
   await uploadSoilSampleToDdb(event, emptyContext, () => {});
   expect(dynamoLoaderMock).toBeCalled();
@@ -39,7 +39,6 @@ test("DynamoDB is succesfully called", async () => {
 
 test("DynamoDB is unsuccesfully called", async () => {
   jest.resetAllMocks();
-  const event: S3Event = bodyJson as any;
   getS3DataMock.mockReturnValue(Promise.reject(new Error()));
   await uploadSoilSampleToDdb(event, emptyContext, () => {});
   expect(dynamoLoaderMock).not.toBeCalled();
