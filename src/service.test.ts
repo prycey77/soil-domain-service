@@ -1,9 +1,9 @@
 import { S3Event, Context } from "aws-lambda";
-import bodyJson from "./trigger.json";
 import { uploadSoilSampleToDdb } from "./service";
 import { dynamoLoader } from "./ddbLoader";
 import { getS3Data } from "./getS3Object";
 
+const bodyJson = require("./trigger.json");
 // typescript magic..
 jest.mock("./getS3Object");
 jest.mock("./ddbLoader");
@@ -27,15 +27,20 @@ function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunc
   return fn as jest.MockedFunction<T>;
 }
 
-const body = JSON.parse(bodyJson);
-
 const getS3DataMock = mockFunction(getS3Data);
 const dynamoLoaderMock = mockFunction(dynamoLoader);
 
-// getS3DataMock.mockImplementation;
-test("Upload Soil Sample Lambda Test", async () => {
-  const event: S3Event = { body } as any;
+test("DynamoDB is succesfully called", async () => {
+  const event: S3Event = bodyJson as any;
   getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
-  const response = await uploadSoilSampleToDdb(event, emptyContext, () => {});
-  expect(dynamoLoaderMock).toBeCalledTimes(1);
+  await uploadSoilSampleToDdb(event, emptyContext, () => {});
+  expect(dynamoLoaderMock).toBeCalled();
+});
+
+test("DynamoDB is unsuccesfully called", async () => {
+  jest.resetAllMocks();
+  const event: S3Event = bodyJson as any;
+  getS3DataMock.mockReturnValue(Promise.reject(new Error()));
+  await uploadSoilSampleToDdb(event, emptyContext, () => {});
+  expect(dynamoLoaderMock).not.toBeCalled();
 });

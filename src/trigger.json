@@ -7,30 +7,30 @@
           "eventTime": "2021-04-15T14:06:51.007Z",
           "eventName": "ObjectCreated:Put",
           "userIdentity": {
-              "principalId": "AWS:AROAQJMLKSQE5EVTKCJRV:richard.pryce@bardsley-england.com"
+              "principalId": "AWS:AROATest@test.com"
           },
           "requestParameters": {
               "sourceIPAddress": "80.3.68.152"
           },
           "responseElements": {
-              "x-amz-request-id": "MHDGFT0FPRQD5B2D",
-              "x-amz-id-2": "bSrRfPYIy/csOqi3oGYaG8IP0idVEekM/SzxHrYk/h4o4aGZvnh+tKggpL7Twj/RWx9fUk5dMWeVbz4mRca/JLt9Qyz/ShvZ"
+              "x-amz-request-id": "MHDGD5B2D",
+              "x-amz-id-2": "bSrRfPYIy/csOqi3oGYa4aGZvnh+tKggpL7TLt9Qyz/ShvZ"
           },
           "s3": {
               "s3SchemaVersion": "1.0",
-              "configurationId": "0f60ce7e-2585-460f-9779-3fbb27b4e02b",
+              "configurationId": "0f60ce7e-7b4e02b",
               "bucket": {
-                  "name": "eurofins-monitor-results",
+                  "name": "dummy-database",
                   "ownerIdentity": {
-                      "principalId": "AW0PHDL1JXGVV"
+                      "principalId": "AW0PSDFSDFFDS"
                   },
                   "arn": "arn:aws:s3:::eurofins-monitor-results"
               },
               "object": {
                   "key": "more-results.json",
                   "size": 385443,
-                  "eTag": "0e8291df6a75268a01cd98641dcccfcd",
-                  "sequencer": "006078487BCB14F7A3"
+                  "eTag": "0e8291dsdf4323244ccfcd",
+                  "sequencer": "00607SDFSDFSFSD7A3"
               }
           }
       }
