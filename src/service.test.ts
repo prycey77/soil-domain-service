@@ -4,9 +4,6 @@ import { dynamoLoader } from "./ddbLoader";
 import { getS3Data } from "./getS3Object";
 
 const bodyJson = require("./trigger.json");
-// typescript magic..
-jest.mock("./getS3Object");
-jest.mock("./ddbLoader");
 
 const emptyContext: Context = {
   callbackWaitsForEmptyEventLoop: false,
@@ -23,23 +20,33 @@ const emptyContext: Context = {
   succeed: () => {},
 };
 
+jest.mock("./getS3Object");
+jest.mock("./ddbLoader");
+
+// typescript magic..
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {
   return fn as jest.MockedFunction<T>;
 }
 
 const getS3DataMock = mockFunction(getS3Data);
 const dynamoLoaderMock = mockFunction(dynamoLoader);
+
 const event: S3Event = bodyJson as any;
 
-test("DynamoDB is succesfully called", async () => {
-  getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
-  await uploadSoilSampleToDdb(event, emptyContext, () => {});
-  expect(dynamoLoaderMock).toBeCalled();
-});
+describe("Soil Domain service tests", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  test("DynamoDB is succesfully called", async () => {
+    getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
+    await uploadSoilSampleToDdb(event, emptyContext, () => {});
+    expect(dynamoLoaderMock).toBeCalled();
+  });
 
-test("DynamoDB is unsuccesfully called", async () => {
-  jest.resetAllMocks();
-  getS3DataMock.mockReturnValue(Promise.reject(new Error()));
-  await uploadSoilSampleToDdb(event, emptyContext, () => {});
-  expect(dynamoLoaderMock).not.toBeCalled();
+  test("DynamoDB is unsuccesfully called", async () => {
+    getS3DataMock.mockReturnValue(Promise.reject(new Error()));
+    const result = await uploadSoilSampleToDdb(event, emptyContext, () => {});
+    expect(dynamoLoaderMock).not.toBeCalled();
+    expect(result).not.toBeDefined();
+  });
 });
