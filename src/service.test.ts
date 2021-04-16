@@ -39,14 +39,15 @@ describe("Soil Domain service tests", () => {
   });
   test("DynamoDB is succesfully called", async () => {
     getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
-    await uploadSoilSampleToDdb(event, emptyContext, () => {});
+    const result = await uploadSoilSampleToDdb(event, emptyContext, () => {});
     expect(dynamoLoaderMock).toBeCalled();
+    expect(result).not.toStrictEqual(Error());
   });
 
   test("DynamoDB is unsuccesfully called", async () => {
     getS3DataMock.mockReturnValue(Promise.reject(new Error()));
     const result = await uploadSoilSampleToDdb(event, emptyContext, () => {});
     expect(dynamoLoaderMock).not.toBeCalled();
-    expect(result).not.toBeDefined();
+    expect(result).toStrictEqual(Error());
   });
 });

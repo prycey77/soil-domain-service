@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import csv = require("csvtojson");
 
 const filepath = "./test.csv";
