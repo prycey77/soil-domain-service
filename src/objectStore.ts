@@ -8,7 +8,7 @@ type GetObjectParams = {
 };
 
 const getJsonObject = async (getObjParams: GetObjectParams) => {
-  const s3Data = await s3.getObject(getObjParams).promise();
+  const s3Data: any = await s3.getObject(getObjParams).promise();
   if (s3Data.Body === undefined) {
     throw new Error("S3 data body is undefined");
   }
