@@ -1,53 +1,46 @@
-import { S3Event, Context } from "aws-lambda";
-import { uploadSoilSampleToDdb } from "./service";
-import { dynamoLoader } from "./ddbLoader";
-import { getS3Data } from "./getS3Object";
+import { Context } from "aws-lambda";
+import { saveSoilSample } from "./service";
+import { saveItems } from "./database";
+import { getJsonObject } from "./objectStore";
 
-const bodyJson = require("./trigger.json");
-
-const emptyContext: Context = {
-  callbackWaitsForEmptyEventLoop: false,
-  functionName: "",
-  functionVersion: "",
-  invokedFunctionArn: "",
-  memoryLimitInMB: "",
-  awsRequestId: "",
-  logGroupName: "",
-  logStreamName: "",
-  getRemainingTimeInMillis: () => 1,
-  done: () => {},
-  fail: () => {},
-  succeed: () => {},
-};
-
-jest.mock("./getS3Object");
-jest.mock("./ddbLoader");
+import event from "./trigger.json";
 
 // typescript magic..
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {
   return fn as jest.MockedFunction<T>;
 }
 
-const getS3DataMock = mockFunction(getS3Data);
-const dynamoLoaderMock = mockFunction(dynamoLoader);
+const emptyContext: Context = {} as any;
 
-const event: S3Event = bodyJson as any;
+jest.mock("./objectStore");
+jest.mock("./database");
+
+const getJsonObjectMock = mockFunction(getJsonObject);
+const saveItemsMock = mockFunction(saveItems);
 
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  test("DynamoDB is succesfully called", async () => {
-    getS3DataMock.mockReturnValue(Promise.resolve({ test: "test" }));
-    const result = await uploadSoilSampleToDdb(event, emptyContext, () => {});
-    expect(dynamoLoaderMock).toBeCalled();
-    expect(result).not.toStrictEqual(Error());
+  test("Database is called on save", async () => {
+    getJsonObjectMock.mockReturnValue(Promise.resolve({ test: "test" }));
+    await saveSoilSample(event, emptyContext, () => {});
+    expect(getJsonObjectMock).toBeCalled();
+    expect(saveItemsMock).toBeCalled();
   });
 
-  test("DynamoDB is unsuccesfully called", async () => {
-    getS3DataMock.mockReturnValue(Promise.reject(new Error()));
-    const result = await uploadSoilSampleToDdb(event, emptyContext, () => {});
-    expect(dynamoLoaderMock).not.toBeCalled();
-    expect(result).toStrictEqual(Error());
+  test("Throws error on Database error", async () => {
+    const databaseError = new Error("database");
+    let thrownError = new Error("something");
+    getJsonObjectMock.mockReturnValue(Promise.reject(databaseError));
+    try {
+      await saveSoilSample(event, emptyContext, () => {});
+    } catch (error) {
+      thrownError = error;
+    }
+    expect(saveItemsMock).not.toBeCalled();
+    expect(thrownError).toBe(databaseError);
   });
 });
+
+// TODO tests for S3 object not existing, not being valid JSON, not being the format we expect
