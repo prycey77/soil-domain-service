@@ -42,17 +42,6 @@ describe("Soil Domain service tests", () => {
     expect(saveItemsMock).not.toBeCalled();
     expect(thrownError).toBe(databaseError);
   });
-
-  test("Throws error if data is not json", async () => {
-    getJsonObjectMock.mockReturnValue(Promise.resolve({ "": "" }));
-    await saveSoilSample(event, emptyContext, () => {});
-    expect(getJsonObjectMock).toBeCalled();
-    expect(saveItemsMock).toBeCalled();
-  });
-
-  // test("Test for S3 object not existing", async () => {
-  //   getJsonObjectMock.
-  // })
 });
 
 // TODO tests for S3 object not existing, not being valid JSON, not being the format we expect

@@ -1,11 +1,10 @@
-const isJson = (string: any) => {
+const isJson = (str: any) => {
   try {
-    JSON.parse(string);
+    JSON.parse(str);
   } catch (e) {
     return false;
   }
-  // eslint-disable-next-line no-restricted-globals
-  return isNaN(string);
+  return true;
 };
 
 export { isJson };
