@@ -5,13 +5,12 @@
   "scripts": {
     "lint": "eslint . --ext ts,tsx && npx prettier -c '**/*.(js|json)'",
     "prettier": "npx prettier -w '**/*.(js|json)'",
-    "test": "npx jest",
-    "build": "webpack",
-    "setup": "source setup.sh"
+    "init-template": "./bin/init-template.sh",
+    "init": "./bin/init.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bx-LOOOP/service-template.git"
+    "url": "https://github.com/Bx-LOOOP/service-template.git"
   },
   "author": "Bx",
   "license": "ISC",
@@ -19,33 +18,58 @@
     "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
   },
   "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "@typescript-eslint/parser": "^4.17.0",
-    "cache-loader": "^4.1.0",
-    "eslint": "^7.21.0",
+    "@semantic-release/git": "^9.0.0",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "fork-ts-checker-webpack-plugin": "^6.1.1",
+    "eslint-plugin-prettier": "^3.4.0",
     "jest": "^26.6.3",
     "prettier": "2.2.1",
-    "ts-jest": "^26.5.3",
-    "ts-loader": "^8.0.18",
-    "typescript": "^4.2.3",
-    "webpack": "^5.24.4",
-    "webpack-cli": "^4.5.0"
+    "semantic-release-plus": "^18.2.5",
+    "ts-jest": "^26.5.5",
+    "ts-loader": "^8.1.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   },
-  "dependencies": {
-    "react": "^17.0.1"
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "commitPaths": [
+      ".",
+      ":(exclude)*.md"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "src/dist"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "deploy/dist"
+        }
+      ],
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "src/package.json",
+            "deploy/package.json"
+          ]
+        }
+      ]
+    ]
   }
 }

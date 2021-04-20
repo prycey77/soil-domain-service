@@ -1,1 +1,2 @@
-/.webpackCache
+dist
+node_modules

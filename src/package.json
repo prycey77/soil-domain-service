@@ -1,0 +1,39 @@
+{
+  "name": "@bx-looop/service-template-runtime",
+  "version": "0.1.0",
+  "description": "A template for LOOOP service repositories",
+  "scripts": {
+    "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
+    "test": "npx jest",
+    "postversion": "cp -r package.json .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bx-LOOOP/service-template.git"
+  },
+  "author": "Bx",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
+  },
+  "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.75",
+    "@types/node-fetch": "^2.5.10",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
