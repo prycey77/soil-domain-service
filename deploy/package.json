@@ -1,44 +1,44 @@
 {
-  "name": "@bx-looop/service-template",
-  "version": "0.1.0",
-  "description": "A template for LOOOP service repositories",
-  "scripts": {
-    "build": "tsc && cp ../.npmignore dist/",
-    "postversion": "cp -r package.json .. && node ../../bin/post-version.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Bx-LOOOP/service-template.git"
-  },
-  "author": "Bx",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
-  },
-  "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist/"
-    ]
-  },
-  "dependencies": {
-    "@bx-looop/service-template-runtime": "file://../src/dist",
-    "@pulumi/aws": "^3.38.1",
-    "@pulumi/awsx": "^0.24.0",
-    "@pulumi/pulumi": "^2.25.2"
-  },
-  "devDependencies": {
-    "typescript": "^4.2.4"
-  },
-  "pulumi": {
-    "runtimeDependencies": {
-      "@bx-looop/service-template-runtime": "file://../src/dist"
+    "name": "@bx-looop/service-template",
+    "version": "1.0.0",
+    "description": "A template for LOOOP service repositories",
+    "scripts": {
+        "build": "tsc && cp ../.npmignore dist/",
+        "postversion": "cp -r package.json .. && node ../../bin/post-version.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bx-LOOOP/service-template.git"
+    },
+    "author": "Bx",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
+    },
+    "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testPathIgnorePatterns": [
+            "/node_modules/",
+            "/dist/"
+        ]
+    },
+    "dependencies": {
+        "@bx-looop/service-template-runtime": "file://../src/dist",
+        "@pulumi/aws": "^3.38.1",
+        "@pulumi/awsx": "^0.24.0",
+        "@pulumi/pulumi": "^2.25.2"
+    },
+    "devDependencies": {
+        "typescript": "^4.2.4"
+    },
+    "pulumi": {
+        "runtimeDependencies": {
+            "@bx-looop/service-template-runtime": "file://../src/dist"
+        }
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
     }
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  }
 }
