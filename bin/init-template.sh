@@ -23,7 +23,7 @@ read desc
 
 printf "\n"
 
-// udateFile filename, sedPattern, 
+# replace a pattern in a file and print a description if it is successful
 replaceInFile() {
   FILE=$1
   PATTERN=$2
@@ -54,6 +54,7 @@ fi
 replaceInFile "README.md" "s/service-template/${name}/g" "Service Name"
 replaceInFile "README.md" "s/service-title/${title}/g" "Service Title"
 replaceInFile "README.md" "s/service-description/${desc}/g" "Service Description"
+replaceInFile "./deploy/index.ts" "s/service-template/${name}/g" "Service Name"
 
 # remove npm command to init-template and the init-template script itselt
 
