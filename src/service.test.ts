@@ -18,13 +18,14 @@ jest.mock("aws-sdk");
 
 const getJsonObjectMock = mockFunction(getJsonObject);
 const saveItemsMock = mockFunction(saveItems);
+const primaryKey = "Sample_description";
 
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
   test("Database is called on save", async () => {
-    getJsonObjectMock.mockReturnValue(Promise.resolve({ Sample_description: "test" }));
+    getJsonObjectMock.mockReturnValue(Promise.resolve({ [primaryKey]: "test" }));
     await saveSoilSample(event, emptyContext, () => {});
     expect(getJsonObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();

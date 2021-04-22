@@ -21,10 +21,9 @@ jest.mock("aws-sdk", () => {
 });
 
 describe("mock s3 get object call", () => {
+  const params = { Bucket: "testBucket", Key: "testKey" };
   test("test s3 is returning data", async () => {
-    // const data = { abc: 2 };
-    const res = await getJsonObject({ Bucket: "testBucket", Key: "testKey" });
-    // console.log(Object.keys(res)[0]);
+    const res = await getJsonObject(params);
     expect(res).toStrictEqual(testData);
   });
   test("error if s3 is not returning json", async () => {
@@ -40,7 +39,7 @@ describe("mock s3 get object call", () => {
       };
     });
 
-    const res = await getJsonObject({ Bucket: "testBucket", Key: "testKey" });
+    const res = await getJsonObject(params);
     const err = new Error("Not Json");
     expect(res).toEqual(err);
   });

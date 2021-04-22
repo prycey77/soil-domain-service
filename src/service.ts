@@ -10,6 +10,7 @@ const saveSoilSample: S3Handler = async (event) => {
 
   const dataJson = await getJsonObject({ Bucket, Key });
   if (Object.keys(dataJson)[0] !== primaryKey) {
+    // eslint-disable-next-line no-console
     console.log("Incorrect primary key");
     return;
   }
