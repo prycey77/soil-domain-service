@@ -1,7 +1,7 @@
 import { Context } from "aws-lambda";
 import { saveSoilSample } from "./service";
 import { saveItems } from "./database";
-import { getJsonObject } from "./objectStore";
+import { getS3Object } from "./objectStore";
 
 import event from "./trigger.json";
 
@@ -16,7 +16,7 @@ jest.mock("./objectStore");
 jest.mock("./database");
 jest.mock("aws-sdk");
 
-const getJsonObjectMock = mockFunction(getJsonObject);
+const getS3ObjectMock = mockFunction(getS3Object);
 const saveItemsMock = mockFunction(saveItems);
 const primaryKey = "Sample_description";
 
@@ -25,16 +25,21 @@ describe("Soil Domain service tests", () => {
     jest.resetAllMocks();
   });
   test("Database is called on save", async () => {
-    getJsonObjectMock.mockReturnValue(Promise.resolve({ [primaryKey]: "test" }));
+    getS3ObjectMock.mockReturnValue(
+      Promise.resolve({
+        data:
+          '[{ "Sample_description": "test sample","data": "test data"},{"Sample_description": "test2","data": "sampledata"}]',
+      })
+    );
     await saveSoilSample(event, emptyContext, () => {});
-    expect(getJsonObjectMock).toBeCalled();
+    expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();
   });
 
   test("Throws error on Database error", async () => {
     const databaseError = new Error("database");
     let thrownError = new Error("something");
-    getJsonObjectMock.mockReturnValue(Promise.reject(databaseError));
+    getS3ObjectMock.mockReturnValue(Promise.reject(databaseError));
     try {
       await saveSoilSample(event, emptyContext, () => {});
     } catch (error) {
@@ -44,11 +49,14 @@ describe("Soil Domain service tests", () => {
     expect(thrownError).toBe(databaseError);
   });
   test("Database not called if primary key is incorrect", async () => {
-    getJsonObjectMock.mockReturnValue(Promise.resolve({ IncorrectPrimaryKey: "test" }));
+    getS3ObjectMock.mockReturnValue(
+      Promise.resolve({ data: '[{ "IncorrectPrimaryKey": "test"}]' })
+    );
     await saveSoilSample(event, emptyContext, () => {});
-    expect(getJsonObjectMock).toBeCalled();
+    expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).not.toBeCalled();
   });
 });
 
-// TODO tests for S3 object not existing, not being valid JSON, not being the format we expect
+// // TODO tests for S3 object not existing, not being valid JSON, not being the format we expect
+export {};
