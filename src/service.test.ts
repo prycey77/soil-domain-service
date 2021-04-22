@@ -24,7 +24,7 @@ describe("Soil Domain service tests", () => {
     jest.resetAllMocks();
   });
   test("Database is called on save", async () => {
-    getJsonObjectMock.mockReturnValue(Promise.resolve({ test: "test" }));
+    getJsonObjectMock.mockReturnValue(Promise.resolve({ Sample_description: "test" }));
     await saveSoilSample(event, emptyContext, () => {});
     expect(getJsonObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();
@@ -41,6 +41,12 @@ describe("Soil Domain service tests", () => {
     }
     expect(saveItemsMock).not.toBeCalled();
     expect(thrownError).toBe(databaseError);
+  });
+  test("Database not called if primary key is incorrect", async () => {
+    getJsonObjectMock.mockReturnValue(Promise.resolve({ IncorrectPrimaryKey: "test" }));
+    await saveSoilSample(event, emptyContext, () => {});
+    expect(getJsonObjectMock).toBeCalled();
+    expect(saveItemsMock).not.toBeCalled();
   });
 });
 
