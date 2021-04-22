@@ -18,7 +18,7 @@ const getJsonObject = async (getObjParams: GetObjectParams) => {
     const json = JSON.parse(dataString);
     return json;
   } catch (err) {
-    return new Error("Not Json");
+    return new Error("Not Json..");
   }
 };
 
