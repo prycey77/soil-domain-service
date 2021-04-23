@@ -27,7 +27,7 @@ describe("Soil Domain service tests", () => {
   test("Database is called on save", async () => {
     getS3ObjectMock.mockReturnValue(
       Promise.resolve({
-        data:
+        jsonObject:
           '[{ "Sample_description": "test sample","data": "test data"},{"Sample_description": "test2","data": "sampledata"}]',
       })
     );
@@ -50,7 +50,7 @@ describe("Soil Domain service tests", () => {
   });
   test("Database not called if primary key is incorrect", async () => {
     getS3ObjectMock.mockReturnValue(
-      Promise.resolve({ data: '[{ "IncorrectPrimaryKey": "test"}]' })
+      Promise.resolve({ jsonObject: '[{ "IncorrectPrimaryKey": "test"}]' })
     );
     await saveSoilSample(event, emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();

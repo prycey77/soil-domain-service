@@ -8,15 +8,16 @@ type GetObjectParams = {
   Key: string;
 };
 
-// eslint-disable-next-line consistent-return
+const convertCsvToJson = async (stream: any) => {
+  const dataJson = await csv({ flatKeys: true, delimiter: "," }).fromStream(stream);
+  const jsonObject = JSON.stringify(dataJson);
+
+  return { jsonObject };
+};
+
 const getS3Object = async (getObjParams: GetObjectParams) => {
-  const s3Data: any = s3.getObject(getObjParams).createReadStream();
-  const dataJson = await csv({ flatKeys: true, delimiter: "," }).fromStream(s3Data);
-  console.log(`stringify datajson ${JSON.stringify(dataJson)}`);
-
-  const data = JSON.stringify(dataJson);
-
-  return { data };
+  const stream = s3.getObject(getObjParams).createReadStream();
+  return convertCsvToJson(stream);
 };
 
 export { getS3Object };
