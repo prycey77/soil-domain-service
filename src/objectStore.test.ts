@@ -1,19 +1,18 @@
 import fs from "fs";
 import { isJson } from "./lib/jsonHelper";
 
-import { convertXlsxToJson } from "./objectStore";
+import { convertXlsxToJson, convertCsvToJson } from "./objectStore";
 
 const dummyData = (file: fs.PathLike) => {
   try {
     const data = fs.readFileSync(file);
     return data;
   } catch (err) {
-    console.error(err);
     return err;
   }
 };
 describe("convertXlsxToJson", () => {
-  test("S3 object is converted to json", async () => {
+  test("S3 object is converted to json from xlsx", async () => {
     const data = await dummyData("./src/lib/test.xlsx");
     const res = await convertXlsxToJson({ Body: data });
     const resIsJson = isJson(res.jsonObject);
@@ -24,5 +23,14 @@ describe("convertXlsxToJson", () => {
     const res = await convertXlsxToJson({ Body: data });
     const resIsJson = isJson(res.jsonObject);
     expect(resIsJson).toEqual(false);
+  });
+});
+describe("converCsvToJson", () => {
+  test("S3 object is converted to json from csv", async () => {
+    const data = await dummyData("./src/lib/test.csv");
+    const res: any = await convertCsvToJson({ Body: data });
+    const resIsJson = isJson(res.jsonObject);
+    expect(JSON.parse(res.jsonObject)[0].Sample_description).toEqual("25ACRBLACK");
+    expect(resIsJson).toEqual(true);
   });
 });

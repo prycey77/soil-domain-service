@@ -27,7 +27,7 @@
           "arn": "arn:aws:s3:::eurofins-monitor-results"
         },
         "object": {
-          "key": "more-results.json",
+          "key": "test.csv",
           "size": 385443,
           "eTag": "0e8291dsdf4323244ccfcd",
           "sequencer": "00607SDFSDFSFSD7A3"

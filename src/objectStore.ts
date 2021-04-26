@@ -1,5 +1,6 @@
 import AWS from "aws-sdk";
 import XLSX from "xlsx";
+import csv from "csvtojson";
 
 const s3 = new AWS.S3();
 
@@ -26,9 +27,18 @@ const convertXlsxToJson = async (s3Object: any) => {
   return { jsonObject };
 };
 
+const convertCsvToJson = async (s3Object: any) => {
+  const dataJson = await csv({ flatKeys: true, delimiter: "," }).fromString(
+    s3Object.Body.toString()
+  );
+  const jsonObject = JSON.stringify(dataJson);
+
+  return { jsonObject };
+};
+
 const getS3Object = async (getObjParams: GetObjectParams) => {
   const s3Object = s3.getObject(getObjParams).promise();
   return s3Object;
 };
 
-export { getS3Object, convertXlsxToJson };
+export { getS3Object, convertXlsxToJson, convertCsvToJson };
