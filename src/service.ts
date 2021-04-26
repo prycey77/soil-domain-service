@@ -24,15 +24,17 @@ const saveSoilSample: S3Handler = async (event) => {
     const csvData = await convertCsvToJson(s3Object);
     parsedDataJson = await JSON.parse(csvData.jsonObject);
   }
-
-  if (Object.keys(parsedDataJson[0])[0] !== primaryKey) {
+  try {
+    if (Object.keys(parsedDataJson[0])[0] !== primaryKey) {
+      throw new Error("Incorrect primary key");
+    }
+    await saveItems(parsedDataJson);
     // eslint-disable-next-line no-console
-    console.log("Incorrect primary key");
-    return;
+    console.log("Success!");
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`Something went wrong. Error: ${e}`);
   }
-  await saveItems(parsedDataJson);
-  // eslint-disable-next-line no-console
-  console.log("Success!");
 };
 
 export { saveSoilSample };

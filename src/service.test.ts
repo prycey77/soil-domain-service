@@ -4,6 +4,7 @@ import { saveItems } from "./database";
 import { getS3Object, convertXlsxToJson, convertCsvToJson } from "./objectStore";
 import event from "./lib/trigger.json";
 import csvEvent from "./lib/csvtrigger.json";
+import txtEvent from "./lib/txttrigger.json";
 
 // typescript magic..
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {
@@ -67,6 +68,11 @@ describe("Soil Domain service tests", () => {
       Promise.resolve({ jsonObject: '[{ "IncorrectPrimaryKey": "test"}]' })
     );
     await saveSoilSample(event, emptyContext, () => {});
+    expect(getS3ObjectMock).toBeCalled();
+    expect(saveItemsMock).not.toBeCalled();
+  });
+  test("saveSoilSample called with incorrect filetype", async () => {
+    await saveSoilSample(txtEvent, emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).not.toBeCalled();
   });
