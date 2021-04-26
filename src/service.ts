@@ -10,7 +10,7 @@ const saveSoilSample: S3Handler = async (event) => {
   const s3Object = await getS3Object({ Bucket, Key });
 
   const fileName = event.Records[0].s3.object.key;
-  const fileType = fileName.split(".")[1];
+  const fileType = fileName.split(".")[fileName.split.length - 1];
 
   let parsedDataJson;
   if (fileType === "xlsx") {
