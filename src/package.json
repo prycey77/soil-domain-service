@@ -1,6 +1,6 @@
 {
   "name": "@bx-looop/service-template-runtime",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A template for LOOOP service repositories",
   "scripts": {
     "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
