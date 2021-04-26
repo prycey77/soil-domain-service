@@ -1,8 +1,7 @@
 import { Context } from "aws-lambda";
 import { saveSoilSample } from "./service";
 import { saveItems } from "./database";
-import { getS3Object, convertCsvToJson } from "./objectStore";
-
+import { getS3Object, convertXlsxToJson } from "./objectStore";
 import event from "./trigger.json";
 
 // typescript magic..
@@ -18,21 +17,21 @@ jest.mock("aws-sdk");
 
 const getS3ObjectMock = mockFunction(getS3Object);
 const saveItemsMock = mockFunction(saveItems);
-const convertCsvToJsonMock = mockFunction(convertCsvToJson);
+const convertXlsxToJsonMock = mockFunction(convertXlsxToJson);
 
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
   test("Database is called on save", async () => {
-    convertCsvToJsonMock.mockReturnValue(
+    convertXlsxToJsonMock.mockReturnValue(
       Promise.resolve({
         jsonObject:
           '[{ "Sample_description": "test sample","data": "test data"},{"Sample_description": "test2","data": "sampledata"}]',
       })
     );
     await saveSoilSample(event, emptyContext, () => {});
-    expect(convertCsvToJsonMock).toBeCalled();
+    expect(convertXlsxToJsonMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();
   });
@@ -50,7 +49,7 @@ describe("Soil Domain service tests", () => {
     expect(thrownError).toBe(databaseError);
   });
   test("Database not called if primary key is incorrect", async () => {
-    convertCsvToJsonMock.mockReturnValue(
+    convertXlsxToJsonMock.mockReturnValue(
       Promise.resolve({ jsonObject: '[{ "IncorrectPrimaryKey": "test"}]' })
     );
     await saveSoilSample(event, emptyContext, () => {});
