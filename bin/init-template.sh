@@ -18,6 +18,8 @@ name=$(echo $GIT_URL | sed 's/.*\/\(.*\)\.git/\1/g')
 
 printf "${bgreen}? ${bold}README.md title (e.g. 'Service Name'): ${cyan}"
 read title
+printf "${bgreen}? ${bold}Pulumi Component Name (e.g. 'ServiceName'): ${cyan}"
+read nameProper
 printf "${bgreen}? ${bold}Service description: ${cyan}"
 read desc
 
@@ -55,6 +57,8 @@ replaceInFile "README.md" "s/service-template/${name}/g" "Service Name"
 replaceInFile "README.md" "s/service-title/${title}/g" "Service Title"
 replaceInFile "README.md" "s/service-description/${desc}/g" "Service Description"
 replaceInFile "./deploy/index.ts" "s/service-template/${name}/g" "Service Name"
+replaceInFile "./deploy/index.ts" "s/ServiceTemplate/${nameProper}/g" "Pulumi Component Name"
+replaceInFile "README.md" "s/ServiceTemplate/${nameProper}/g" "Pulumi Component Name"
 
 # remove npm command to init-template and the init-template script itselt
 
