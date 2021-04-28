@@ -3,13 +3,15 @@ const isJsonObject = (obj: any) => {
     return false;
   }
   try {
-    JSON.stringify(obj);
-    // if (Object.prototype.toString.call(json).slice(8, -1) !== "Object") {
-    return true;
+    if (typeof obj === "object" && obj !== null) {
+      JSON.stringify(obj);
+      return true;
+    }
     // }
   } catch (e) {
     return false;
   }
+  return false;
 };
 
 export { isJsonObject };
