@@ -5,10 +5,6 @@ const tableName = "eurofins-monitor-results";
 const saveItems = async (rawItems: any) => {
   const dynamo = new AWS.DynamoDB.DocumentClient();
   let position = 0;
-  console.log(`DDB:: ${rawItems}`);
-  console.log(`DDB.length:: ${rawItems.length}`);
-  console.log(`DDB.length:: ${rawItems.slice(position, position + 25)}`);
-
   while (position < rawItems.length) {
     // eslint-disable-next-line no-console
     console.log(`loading ${position} to ${position + 25}`);
