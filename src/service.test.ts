@@ -4,8 +4,6 @@ import { saveItems } from "./database";
 import { getS3Object } from "./objectStore";
 import { convertXlsxToJson, convertCsvToJson } from "./converter";
 import { event } from "./lib/triggerTemplate";
-import csvEvent from "./lib/csvtrigger.json";
-import txtEvent from "./lib/txttrigger.json";
 
 // typescript magic..
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {

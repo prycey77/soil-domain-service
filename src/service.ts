@@ -16,15 +16,21 @@ const saveSoilSample: S3Handler = async (event) => {
 
   let dataJson;
   if (fileType === ".xlsx") {
-    // eslint-disable-next-line no-console
-    console.log("File is xlsx");
-    const xlsxData: any = await convertXlsxToJson(s3Object);
-    dataJson = xlsxData;
+    try {
+      const xlsxData: any = await convertXlsxToJson(s3Object);
+      dataJson = xlsxData;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
   } else if (fileType === ".csv") {
-    // eslint-disable-next-line no-console
-    console.log("File csv");
-    const csvData: any = await convertCsvToJson(s3Object);
-    dataJson = csvData;
+    try {
+      const csvData: any = await convertCsvToJson(s3Object);
+      dataJson = csvData;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
   }
   try {
     if (Object.keys(dataJson[0])[0] !== primaryKey) {
