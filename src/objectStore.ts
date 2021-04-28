@@ -11,12 +11,10 @@ type GetObjectParams = {
 const convertXlsxToJson = async (s3Object: any) => {
   const workBook = XLSX.read(s3Object.Body, { type: "buffer" });
   let workSheet;
-  const targetSheet = "Sheet1";
+  // const targetSheet = "Sheet1";
   try {
-    workSheet = workBook.Sheets[targetSheet];
+    workSheet = workBook.Sheets[workBook.SheetNames[0]];
     if (!workSheet) {
-      // eslint-disable-next-line no-console
-      console.error(`Sheet ${targetSheet} cannot be found`);
       return process.exit(3);
     }
   } catch (e) {
