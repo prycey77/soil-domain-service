@@ -1,6 +1,7 @@
 import { S3Handler } from "aws-lambda";
 import { saveItems } from "./database";
-import { convertCsvToJson, convertXlsxToJson, getS3Object } from "./objectStore";
+import { getS3Object } from "./objectStore";
+import { convertCsvToJson, convertXlsxToJson } from "./converter";
 
 const primaryKey: string = "Sample_description";
 

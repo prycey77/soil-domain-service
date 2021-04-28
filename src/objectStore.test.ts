@@ -1,7 +1,7 @@
 import fs from "fs";
 import { isJson } from "./lib/jsonHelper";
 
-import { convertXlsxToJson, convertCsvToJson } from "./objectStore";
+import { convertXlsxToJson, convertCsvToJson } from "./converter";
 
 const dummyData = (file: fs.PathLike) => {
   try {

@@ -9,3 +9,6 @@
 
 # Webpack
 /.webpackCache
+
+# coverage
+/coverage

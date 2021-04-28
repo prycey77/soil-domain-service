@@ -1,7 +1,8 @@
 import { Context } from "aws-lambda";
 import { saveSoilSample } from "./service";
 import { saveItems } from "./database";
-import { getS3Object, convertXlsxToJson, convertCsvToJson } from "./objectStore";
+import { getS3Object } from "./objectStore";
+import { convertXlsxToJson, convertCsvToJson } from "./converter";
 import event from "./lib/trigger.json";
 import csvEvent from "./lib/csvtrigger.json";
 import txtEvent from "./lib/txttrigger.json";
@@ -14,6 +15,7 @@ function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunc
 const emptyContext: Context = {} as any;
 
 jest.mock("./objectStore");
+jest.mock("./converter");
 jest.mock("./database");
 jest.mock("aws-sdk");
 
