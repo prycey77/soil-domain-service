@@ -1,4 +1,4 @@
-const isJson = (obj: any) => {
+const isJsonObject = (obj: any) => {
   if (obj.length === 0) {
     return false;
   }
@@ -12,4 +12,4 @@ const isJson = (obj: any) => {
   }
 };
 
-export { isJson };
+export { isJsonObject };
