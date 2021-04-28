@@ -14,23 +14,23 @@ const saveSoilSample: S3Handler = async (event) => {
   const fileName = event.Records[0].s3.object.key;
   const fileType = path.extname(fileName);
 
-  let parsedDataJson;
+  let dataJson;
   if (fileType === ".xlsx") {
     // eslint-disable-next-line no-console
     console.log("File is xlsx");
-    const xlsxData = await convertXlsxToJson(s3Object);
-    parsedDataJson = await JSON.parse(xlsxData.jsonObject);
+    const xlsxData: any = await convertXlsxToJson(s3Object);
+    dataJson = xlsxData;
   } else if (fileType === ".csv") {
     // eslint-disable-next-line no-console
     console.log("File csv");
-    const csvData = await convertCsvToJson(s3Object);
-    parsedDataJson = await JSON.parse(csvData.jsonObject);
+    const csvData: any = await convertCsvToJson(s3Object);
+    dataJson = csvData;
   }
   try {
-    if (Object.keys(parsedDataJson[0])[0] !== primaryKey) {
+    if (Object.keys(dataJson[0])[0] !== primaryKey) {
       throw new Error("Incorrect primary key");
     }
-    await saveItems(parsedDataJson);
+    await saveItems(dataJson);
     // eslint-disable-next-line no-console
     console.log("Success!");
   } catch (e) {

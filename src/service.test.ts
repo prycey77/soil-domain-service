@@ -21,8 +21,8 @@ jest.mock("aws-sdk");
 
 const getS3ObjectMock = mockFunction(getS3Object);
 const saveItemsMock = mockFunction(saveItems);
-const convertXlsxToJsonMock = mockFunction(convertXlsxToJson);
-const convertCsvToJsonMock = mockFunction(convertCsvToJson);
+const convertXlsxToJsonMock: any = mockFunction(convertXlsxToJson);
+const convertCsvToJsonMock: any = mockFunction(convertCsvToJson);
 
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
@@ -30,10 +30,10 @@ describe("Soil Domain service tests", () => {
   });
   test("Database is called on save with xlsx", async () => {
     convertXlsxToJsonMock.mockReturnValue(
-      Promise.resolve({
-        jsonObject:
-          '[{ "Sample_description": "test sample","data": "test data"},{"Sample_description": "test2","data": "sampledata"}]',
-      })
+      Promise.resolve([
+        { Sample_description: "test sample", data: "test data" },
+        { Sample_description: "test2", data: "sampledata" },
+      ])
     );
     await saveSoilSample(event, emptyContext, () => {});
     expect(convertXlsxToJsonMock).toBeCalled();
@@ -42,10 +42,10 @@ describe("Soil Domain service tests", () => {
   });
   test("Database is called on save with csv", async () => {
     convertCsvToJsonMock.mockReturnValue(
-      Promise.resolve({
-        jsonObject:
-          '[{ "Sample_description": "test sample","data": "test data"},{"Sample_description": "test2","data": "sampledata"}]',
-      })
+      Promise.resolve([
+        { Sample_description: "test sample", data: "test data" },
+        { Sample_description: "test2", data: "sampledata" },
+      ])
     );
     await saveSoilSample(csvEvent, emptyContext, () => {});
     expect(convertCsvToJsonMock).toBeCalled();

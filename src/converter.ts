@@ -13,18 +13,18 @@ const convertXlsxToJson = async (s3Object: any) => {
   } catch (e) {
     return process.exit(4);
   }
-  const jsonObject = JSON.stringify(XLSX.utils.sheet_to_json(workSheet));
+  const jsonObject = XLSX.utils.sheet_to_json(workSheet);
 
-  return { jsonObject };
+  return jsonObject;
 };
 
 const convertCsvToJson = async (s3Object: any) => {
-  const dataJson = await csv({ flatKeys: true, delimiter: "," }).fromString(
+  const jsonObject = await csv({ flatKeys: true, delimiter: "," }).fromString(
     s3Object.Body.toString()
   );
-  const jsonObject = JSON.stringify(dataJson);
+  // const jsonObject = JSON.stringify(dataJson);
 
-  return { jsonObject };
+  return jsonObject;
 };
 
 export { convertCsvToJson, convertXlsxToJson };

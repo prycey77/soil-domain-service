@@ -1,13 +1,15 @@
-const isJson = (str: string) => {
+const isJson = (obj: any) => {
+  if (obj.length === 0) {
+    return false;
+  }
   try {
-    const json = JSON.parse(str);
-    if (Object.prototype.toString.call(json[0]).slice(8, -1) !== "Object") {
-      return false;
-    }
+    JSON.stringify(obj);
+    // if (Object.prototype.toString.call(json).slice(8, -1) !== "Object") {
+    return true;
+    // }
   } catch (e) {
     return false;
   }
-  return true;
 };
 
 export { isJson };
