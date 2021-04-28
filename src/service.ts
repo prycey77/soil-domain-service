@@ -2,7 +2,7 @@ import { S3Handler } from "aws-lambda";
 import path from "path";
 import { saveItems } from "./database";
 import { getS3Object } from "./objectStore";
-import { convertCsvToJson, convertXlsxToJson } from "./converter";
+import { csvToJson, xlsxToJson } from "./converter";
 
 const primaryKey: string = "Sample_description";
 
@@ -17,7 +17,7 @@ const saveSoilSample: S3Handler = async (event) => {
   let dataJson;
   if (fileType === ".xlsx") {
     try {
-      const xlsxData: any = await convertXlsxToJson(s3Object);
+      const xlsxData: any = await xlsxToJson(s3Object);
       dataJson = xlsxData;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -25,7 +25,7 @@ const saveSoilSample: S3Handler = async (event) => {
     }
   } else if (fileType === ".csv") {
     try {
-      const csvData: any = await convertCsvToJson(s3Object);
+      const csvData: any = await csvToJson(s3Object);
       dataJson = csvData;
     } catch (e) {
       // eslint-disable-next-line no-console

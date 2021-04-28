@@ -1,10 +1,10 @@
 import XLSX from "xlsx";
 import csv from "csvtojson";
 
-const convertXlsxToJson = async (s3Object: any) => {
+const xlsxToJson = async (s3Object: any) => {
   const workBook = XLSX.read(s3Object.Body, { type: "buffer" });
   let workSheet;
-  // const targetSheet = "Sheet1";
+
   try {
     workSheet = workBook.Sheets[workBook.SheetNames[0]];
     if (!workSheet) {
@@ -18,13 +18,12 @@ const convertXlsxToJson = async (s3Object: any) => {
   return jsonObject;
 };
 
-const convertCsvToJson = async (s3Object: any) => {
+const csvToJson = async (s3Object: any) => {
   const jsonObject = await csv({ flatKeys: true, delimiter: "," }).fromString(
     s3Object.Body.toString()
   );
-  // const jsonObject = JSON.stringify(dataJson);
 
   return jsonObject;
 };
 
-export { convertCsvToJson, convertXlsxToJson };
+export { csvToJson, xlsxToJson };

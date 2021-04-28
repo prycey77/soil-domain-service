@@ -2,7 +2,7 @@ import { Context } from "aws-lambda";
 import { saveSoilSample } from "./service";
 import { saveItems } from "./database";
 import { getS3Object } from "./objectStore";
-import { convertXlsxToJson, convertCsvToJson } from "./converter";
+import { xlsxToJson, csvToJson } from "./converter";
 import { event } from "./lib/triggerTemplate";
 
 // typescript magic..
@@ -19,8 +19,8 @@ jest.mock("aws-sdk");
 
 const getS3ObjectMock = mockFunction(getS3Object);
 const saveItemsMock = mockFunction(saveItems);
-const convertXlsxToJsonMock: any = mockFunction(convertXlsxToJson);
-const convertCsvToJsonMock: any = mockFunction(convertCsvToJson);
+const convertXlsxToJsonMock: any = mockFunction(xlsxToJson);
+const convertCsvToJsonMock: any = mockFunction(csvToJson);
 
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
