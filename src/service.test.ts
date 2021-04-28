@@ -3,7 +3,7 @@ import { saveSoilSample } from "./service";
 import { saveItems } from "./database";
 import { getS3Object } from "./objectStore";
 import { convertXlsxToJson, convertCsvToJson } from "./converter";
-import event from "./lib/trigger.json";
+import { event } from "./lib/triggerTemplate";
 import csvEvent from "./lib/csvtrigger.json";
 import txtEvent from "./lib/txttrigger.json";
 
@@ -35,7 +35,7 @@ describe("Soil Domain service tests", () => {
         { Sample_description: "test2", data: "sampledata" },
       ])
     );
-    await saveSoilSample(event, emptyContext, () => {});
+    await saveSoilSample(event("test.xlsx"), emptyContext, () => {});
     expect(convertXlsxToJsonMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();
@@ -47,7 +47,7 @@ describe("Soil Domain service tests", () => {
         { Sample_description: "test2", data: "sampledata" },
       ])
     );
-    await saveSoilSample(csvEvent, emptyContext, () => {});
+    await saveSoilSample(event("test.csv"), emptyContext, () => {});
     expect(convertCsvToJsonMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).toBeCalled();
@@ -58,7 +58,7 @@ describe("Soil Domain service tests", () => {
     let thrownError = new Error("something");
     getS3ObjectMock.mockReturnValue(Promise.reject(databaseError));
     try {
-      await saveSoilSample(event, emptyContext, () => {});
+      await saveSoilSample(event("test.csv"), emptyContext, () => {});
     } catch (error) {
       thrownError = error;
     }
@@ -69,12 +69,12 @@ describe("Soil Domain service tests", () => {
     convertXlsxToJsonMock.mockReturnValue(
       Promise.resolve({ jsonObject: '[{ "IncorrectPrimaryKey": "test"}]' })
     );
-    await saveSoilSample(event, emptyContext, () => {});
+    await saveSoilSample(event("test.xlsx"), emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).not.toBeCalled();
   });
   test("saveSoilSample called with incorrect filetype", async () => {
-    await saveSoilSample(txtEvent, emptyContext, () => {});
+    await saveSoilSample(event("test.txt"), emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();
     expect(saveItemsMock).not.toBeCalled();
   });
