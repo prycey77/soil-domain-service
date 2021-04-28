@@ -1,4 +1,5 @@
 import { S3Handler } from "aws-lambda";
+import path from "path";
 import { saveItems } from "./database";
 import { getS3Object } from "./objectStore";
 import { convertCsvToJson, convertXlsxToJson } from "./converter";
@@ -11,15 +12,15 @@ const saveSoilSample: S3Handler = async (event) => {
   const s3Object = await getS3Object({ Bucket, Key });
 
   const fileName = event.Records[0].s3.object.key;
-  const fileType = fileName.split(".")[fileName.split.length - 1];
+  const fileType = path.extname(fileName);
 
   let parsedDataJson;
-  if (fileType === "xlsx") {
+  if (fileType === ".xlsx") {
     // eslint-disable-next-line no-console
     console.log("File is xlsx");
     const xlsxData = await convertXlsxToJson(s3Object);
     parsedDataJson = await JSON.parse(xlsxData.jsonObject);
-  } else if (fileType === "csv") {
+  } else if (fileType === ".csv") {
     // eslint-disable-next-line no-console
     console.log("File csv");
     const csvData = await convertCsvToJson(s3Object);
