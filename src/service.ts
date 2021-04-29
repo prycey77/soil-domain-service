@@ -14,6 +14,7 @@ const saveSoilSample: S3Handler = async (event) => {
 
   // eslint-disable-next-line func-names
   const s3Meta: any = await headObject({ Bucket, Key });
+
   if (s3Meta.ContentLength > maxFileSize) {
     throw new Error("file too large");
   }
