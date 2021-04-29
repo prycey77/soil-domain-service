@@ -36,17 +36,17 @@ const saveSoilSample: S3Handler = async (event) => {
   if (fileType === ".csv") {
     try {
       dataJson = await csvToJson(s3Object);
-      // eslint-disable-next-line no-constant-condition
-      if (dataJson instanceof Array) {
-        const lineCount = dataJson.length;
-        const bytesPerLine = s3Meta.ContentLength / lineCount;
-        if (bytesPerLine > 1000) {
-          throw new Error("Something looks wrong with this data");
-        }
-      }
     } catch (e) {
       // eslint-disable-next-line no-console
       return e;
+    }
+    // eslint-disable-next-line no-constant-condition
+    if (dataJson instanceof Array) {
+      const lineCount = dataJson.length;
+      const bytesPerLine = s3Meta.ContentLength / lineCount;
+      if (bytesPerLine > 1000) {
+        throw new Error("Something looks wrong with this data");
+      }
     }
   }
 

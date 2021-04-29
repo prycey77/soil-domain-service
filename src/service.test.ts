@@ -98,16 +98,15 @@ describe("Soil Domain service tests", () => {
       ])
     );
     headObjectMock.mockReturnValue(await Promise.resolve(headResponse(500000)));
-    // const dataError = new Error("Something looks wrong with this data");
-    // let thrownError = new Error("something");
+    const dataError = new Error("Something looks wrong with this data");
+    let thrownError = new Error("something");
     try {
       await saveSoilSample(event("test.csv"), emptyContext, () => {});
     } catch (error) {
-      // console.log(`The error os ${error}`);
-      // thrownError = error;
+      thrownError = error;
     }
     expect(saveItemsMock).not.toBeCalled();
-    // expect(thrownError).toStrictEqual(dataError);
+    expect(thrownError).toStrictEqual(dataError);
   });
 });
 
