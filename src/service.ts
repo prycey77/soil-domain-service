@@ -39,14 +39,14 @@ const saveSoilSample: S3Handler = async (event) => {
       // eslint-disable-next-line no-constant-condition
       if (dataJson instanceof Array) {
         const lineCount = dataJson.length;
-        const bytesPerLine = fileSize / lineCount;
+        const bytesPerLine = s3Meta.ContentLength / lineCount;
         if (bytesPerLine > 1000) {
           throw new Error("Something looks wrong with this data");
         }
       }
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.log(e);
+      return e;
     }
   }
 

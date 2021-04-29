@@ -42,6 +42,7 @@ describe("Soil Domain service tests", () => {
     expect(saveItemsMock).toBeCalled();
   });
   test("Database is called on save with csv", async () => {
+    headObjectMock.mockReturnValue(await Promise.resolve(headResponse(200)));
     convertCsvToJsonMock.mockReturnValue(
       Promise.resolve([
         { Sample_description: "test sample", data: "test data" },
@@ -89,6 +90,25 @@ describe("Soil Domain service tests", () => {
       thrownError = error;
     }
     expect(thrownError).toStrictEqual(fileError);
+  });
+  test("throws error bytes per line is too large", async () => {
+    convertCsvToJsonMock.mockReturnValue(
+      Promise.resolve([
+        { Sample_description: "test sample", data: "test data" },
+        { Sample_description: "test2", data: "sampledata" },
+      ])
+    );
+    headObjectMock.mockReturnValue(await Promise.resolve(headResponse(500000)));
+    // const dataError = new Error("Something looks wrong with this data");
+    // let thrownError = new Error("something");
+    try {
+      await saveSoilSample(event("test.csv"), emptyContext, () => {});
+    } catch (error) {
+      // console.log(`The error os ${error}`);
+      // thrownError = error;
+    }
+    expect(saveItemsMock).not.toBeCalled();
+    // expect(thrownError).toStrictEqual(dataError);
   });
 });
 
