@@ -17,6 +17,8 @@ describe("convertXlsxToJson", () => {
     const res: any = await xlsxToJson({ Body: data });
     const resIsJson = isJsonObject(res);
     expect(resIsJson).toEqual(true);
+
+    expect(res[0].Sample_description).toEqual("25ACRBLACK");
   });
   test("error thrown if S3 object is not xlsx", async () => {
     const data = await dummyData("./src/lib/test.txt");
@@ -31,6 +33,7 @@ describe("converCsvToJson", () => {
     const res: any = await csvToJson({ Body: data });
     const resIsJson = isJsonObject(res);
     expect(resIsJson).toEqual(true);
+
     expect(res[0].Sample_description).toEqual("25ACRBLACK");
   });
 });

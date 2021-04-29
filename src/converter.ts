@@ -1,5 +1,27 @@
 import XLSX from "xlsx";
 import csv from "csvtojson";
+import Ajv from "ajv";
+import schema from "./lib/schema.json";
+
+const ajv = new Ajv();
+
+const validateJson = (jsonObject: any) => {
+  const validate = ajv.compile(schema);
+  let i = 0;
+  // console.log(`object.length ${JSON.stringify(jsonObject[0]).length}`);
+  while (i < jsonObject.length) {
+    const lengthOfItem = JSON.stringify(jsonObject[i]).length;
+    if (!validate(jsonObject[i]) || lengthOfItem > 1000) {
+      // eslint-disable-next-line no-console
+      console.log(validate.errors);
+      // eslint-disable-next-line no-console
+      console.log(jsonObject[i]);
+      return false;
+    }
+    i += 1;
+  }
+  return true;
+};
 
 const xlsxToJson = async (s3Object: any) => {
   const workBook = XLSX.read(s3Object.Body, { type: "buffer" });
@@ -15,15 +37,24 @@ const xlsxToJson = async (s3Object: any) => {
   }
   const jsonObject = XLSX.utils.sheet_to_json(workSheet);
 
-  return jsonObject;
+  if (validateJson(jsonObject)) {
+    return jsonObject;
+  }
+  return new Error("Data in incorrect format");
 };
 
 const csvToJson = async (s3Object: any) => {
-  const jsonObject = await csv({ flatKeys: true, delimiter: "," }).fromString(
-    s3Object.Body.toString()
-  );
+  const jsonObject = await csv({
+    checkType: true,
+    ignoreEmpty: true,
+    flatKeys: true,
+    delimiter: ",",
+  }).fromString(s3Object.Body.toString());
 
-  return jsonObject;
+  if (validateJson(jsonObject)) {
+    return jsonObject;
+  }
+  return new Error("Data in incorrect format");
 };
 
 export { csvToJson, xlsxToJson };
