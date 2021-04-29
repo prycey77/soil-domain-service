@@ -17,18 +17,6 @@ const emptyContext: Context = {} as any;
 jest.mock("./objectStore");
 jest.mock("./converter");
 jest.mock("./database");
-// const headResponse = {
-//   "x-amz-id-2": "ef8yU9AS1ed4OpIszj7UDNEHGran",
-//   "x-amz-request-id": "318BC8BC143432E5",
-//   "x-amz-version-id": "3HL4kqtJlcpXroDTDmjVBH40Nrjfkd",
-//   Date: "Wed, 28 Oct 2009 22:32:00 GMT",
-//   "Last-Modified": "Sun, 1 Jan 2006 12:00:00 GMT",
-//   ETag: "fba9dede5f27731c9771645a39863328",
-//   "Content-Length": 434234,
-//   "Content-Type": "text/plain",
-//   Connection: "close",
-//   Server: "AmazonS3",
-// };
 
 const getS3ObjectMock = mockFunction(getS3Object);
 const saveItemsMock = mockFunction(saveItems);

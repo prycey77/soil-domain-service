@@ -8,7 +8,6 @@ const ajv = new Ajv();
 const validateJson = (jsonObject: any) => {
   const validate = ajv.compile(schema);
   let i = 0;
-  // console.log(`object.length ${JSON.stringify(jsonObject[0]).length}`);
   while (i < jsonObject.length) {
     const lengthOfItem = JSON.stringify(jsonObject[i]).length;
     if (!validate(jsonObject[i]) || lengthOfItem > 1000) {
