@@ -7,7 +7,6 @@ const isJsonObject = (obj: any) => {
       JSON.stringify(obj);
       return true;
     }
-    // }
   } catch (e) {
     return false;
   }

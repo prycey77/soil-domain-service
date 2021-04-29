@@ -5,7 +5,6 @@ import { getS3Object, headObject } from "./objectStore";
 import { xlsxToJson, csvToJson } from "./converter";
 import { event } from "./lib/triggerTemplate";
 import { headResponse } from "./lib/headResponseTemplate";
-// jest.mock("aws-sdk");
 
 // typescript magic..
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {
