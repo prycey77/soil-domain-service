@@ -37,10 +37,8 @@ const saveSoilSample: S3Handler = async (event) => {
     try {
       dataJson = await csvToJson(s3Object);
     } catch (e) {
-      // eslint-disable-next-line no-console
       return e;
     }
-    // eslint-disable-next-line no-constant-condition
     if (dataJson instanceof Array) {
       const lineCount = dataJson.length;
       const bytesPerLine = s3Meta.ContentLength / lineCount;
