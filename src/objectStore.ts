@@ -7,9 +7,8 @@ type GetObjectParams = {
   Key: string;
 };
 
-const getS3Object = async (getObjParams: GetObjectParams) => {
-  const s3Object = s3.getObject(getObjParams).promise();
-  return s3Object;
-};
+const getS3Object = async (getObjParams: GetObjectParams) => s3.getObject(getObjParams).promise();
 
-export { getS3Object };
+const headObject = async (getObjParams: GetObjectParams) => s3.headObject(getObjParams).promise();
+
+export { getS3Object, headObject };

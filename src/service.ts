@@ -1,8 +1,7 @@
 import { S3Handler } from "aws-lambda";
 import path from "path";
-import AWS from "aws-sdk";
 import { saveItems } from "./database";
-import { getS3Object } from "./objectStore";
+import { getS3Object, headObject } from "./objectStore";
 import { csvToJson, xlsxToJson } from "./converter";
 
 const primaryKey: string = "Sample_description";
@@ -10,22 +9,21 @@ const primaryKey: string = "Sample_description";
 const saveSoilSample: S3Handler = async (event) => {
   const { name: Bucket } = event.Records[0].s3.bucket;
   const { key: Key } = event.Records[0].s3.object;
-  const s3 = new AWS.S3();
   const maxFileSize = 500000;
+  const fileSize: number = 0;
+
   // eslint-disable-next-line func-names
-  s3.headObject({ Bucket, Key }, function (err, data: any) {
-    if (err) console.log(err, err.stack);
-    console.log(`Content Length - ${data.ContentLength} content type = ${data.ContentType}`);
-    if (data.ContentLength > maxFileSize) {
-      throw new Error("file too large");
-    }
-  });
+  const s3Meta: any = await headObject({ Bucket, Key });
+  if (s3Meta.ContentLength > maxFileSize) {
+    throw new Error("file too large");
+  }
 
   const s3Object = await getS3Object({ Bucket, Key });
+
   const fileName = event.Records[0].s3.object.key;
   const fileType = path.extname(fileName);
 
-  let dataJson;
+  let dataJson: any[] | Error = [];
   if (fileType === ".xlsx") {
     try {
       const xlsxData: any = await xlsxToJson(s3Object);
@@ -34,18 +32,31 @@ const saveSoilSample: S3Handler = async (event) => {
       // eslint-disable-next-line no-console
       console.log(e);
     }
-  } else if (fileType === ".csv") {
+  }
+  if (fileType === ".csv") {
     try {
-      const csvData: any = await csvToJson(s3Object);
-      dataJson = csvData;
+      dataJson = await csvToJson(s3Object);
+      // eslint-disable-next-line no-constant-condition
+      if (dataJson instanceof Array) {
+        const lineCount = dataJson.length;
+        const bytesPerLine = fileSize / lineCount;
+        if (bytesPerLine > 1000) {
+          throw new Error("Something looks wrong with this data");
+        }
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
     }
   }
+
   try {
-    if (Object.keys(dataJson[0])[0] !== primaryKey) {
-      throw new Error("Incorrect primary key");
+    if (dataJson instanceof Array) {
+      if (Object.keys(dataJson[0])[0] !== primaryKey) {
+        throw new Error("Incorrect primary key");
+      }
+    } else {
+      throw new Error("Something went wrong");
     }
     await saveItems(dataJson);
     // eslint-disable-next-line no-console
