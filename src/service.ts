@@ -6,11 +6,11 @@ import { csvToJson, xlsxToJson } from "./converter";
 
 const primaryKey: string = "Sample_description";
 
+// eslint-disable-next-line consistent-return
 const saveSoilSample: S3Handler = async (event) => {
   const { name: Bucket } = event.Records[0].s3.bucket;
   const { key: Key } = event.Records[0].s3.object;
   const maxFileSize = 500000;
-  const fileSize: number = 0;
 
   const s3Meta: any = await headObject({ Bucket, Key });
 
