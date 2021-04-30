@@ -26,13 +26,13 @@ const headObjectMock: any = mockFunction(headObject);
 describe("Soil Domain service tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    headObjectMock.mockReturnValue(Promise.resolve(headResponse(90000)));
+    headObjectMock.mockReturnValue(Promise.resolve(headResponse(1000)));
   });
   test("Database is called on save with xlsx", async () => {
     convertXlsxToJsonMock.mockReturnValue(
       Promise.resolve([
-        { Sample_description: "test sample", data: "test data" },
-        { Sample_description: "test2", data: "sampledata" },
+        { ORCHARD_KEY: "test sample", data: "test data" },
+        { ORCHARD_KEY: "test2", data: "sampledata" },
       ])
     );
     await saveSoilSample(event("test.xlsx"), emptyContext, () => {});
@@ -41,11 +41,10 @@ describe("Soil Domain service tests", () => {
     expect(saveItemsMock).toBeCalled();
   });
   test("Database is called on save with csv", async () => {
-    headObjectMock.mockReturnValue(await Promise.resolve(headResponse(200)));
     convertCsvToJsonMock.mockReturnValue(
       Promise.resolve([
-        { Sample_description: "test sample", data: "test data" },
-        { Sample_description: "test2", data: "sampledata" },
+        { ORCHARD_KEY: "test sample", data: "test data" },
+        { ORCHARD_KEY: "test2", data: "sampledata" },
       ])
     );
     await saveSoilSample(event("test.csv"), emptyContext, () => {});
@@ -93,8 +92,8 @@ describe("Soil Domain service tests", () => {
   test("throws error bytes per line is too large", async () => {
     convertCsvToJsonMock.mockReturnValue(
       Promise.resolve([
-        { Sample_description: "test sample", data: "test data" },
-        { Sample_description: "test2", data: "sampledata" },
+        { ORCHARD_KEY: "test sample", data: "test data" },
+        { ORCHARD_KEY: "test2", data: "sampledata" },
       ])
     );
     headObjectMock.mockReturnValue(await Promise.resolve(headResponse(500000)));

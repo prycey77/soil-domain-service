@@ -1,6 +1,9 @@
 import AWS from "aws-sdk";
 
 // const tableName = "eurofins-monitor-results";
+if (typeof process.env.TABLE_NAME === "undefined") {
+  throw new Error("Table name is not defined");
+}
 const tableName: string = process.env.TABLE_NAME;
 
 const saveItems = async (rawItems: any) => {

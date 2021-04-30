@@ -4,7 +4,7 @@ import { saveItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
 import { csvToJson, xlsxToJson } from "./converter";
 
-const primaryKey: string = "Sample_description";
+const primaryKey: string = "ORCHARD_KEY";
 
 // eslint-disable-next-line consistent-return
 const saveSoilSample: S3Handler = async (event) => {
@@ -23,15 +23,24 @@ const saveSoilSample: S3Handler = async (event) => {
   const fileName = event.Records[0].s3.object.key;
   const fileType = path.extname(fileName);
 
+  const validateJson = (data: any) => {
+    if (data instanceof Array) {
+      const lineCount = data.length;
+      const bytesPerLine = s3Meta.ContentLength / lineCount;
+      if (bytesPerLine > 1000) {
+        throw new Error("Something looks wrong with this data");
+      }
+    }
+  };
   let dataJson: any[] | Error = [];
   if (fileType === ".xlsx") {
     try {
-      const xlsxData: any = await xlsxToJson(s3Object);
-      dataJson = xlsxData;
+      dataJson = await xlsxToJson(s3Object);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
     }
+    validateJson(dataJson);
   }
   if (fileType === ".csv") {
     try {
@@ -39,13 +48,7 @@ const saveSoilSample: S3Handler = async (event) => {
     } catch (e) {
       return e;
     }
-    if (dataJson instanceof Array) {
-      const lineCount = dataJson.length;
-      const bytesPerLine = s3Meta.ContentLength / lineCount;
-      if (bytesPerLine > 1000) {
-        throw new Error("Something looks wrong with this data");
-      }
-    }
+    validateJson(dataJson);
   }
 
   try {
