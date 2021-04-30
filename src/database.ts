@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 
-const tableName = "eurofins-monitor-results";
+// const tableName = "eurofins-monitor-results";
+const tableName: string = process.env.TABLE_NAME;
 
 const saveItems = async (rawItems: any) => {
   const dynamo = new AWS.DynamoDB.DocumentClient();
