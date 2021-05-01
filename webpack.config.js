@@ -3,14 +3,14 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: "./src/service.ts",
+  entry: {service: "./src/service.ts", getService: "./src/getService.ts"},
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
   output: {
     libraryTarget: "commonjs",
     path: path.join(__dirname, "build"),
-    filename: "service.js",
+    filename: "[name].js",
   },
   target: "node",
   module: {
