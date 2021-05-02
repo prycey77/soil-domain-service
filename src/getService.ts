@@ -2,24 +2,27 @@ import { Handler } from "aws-lambda";
 
 import AWS from "aws-sdk";
 
-AWS.config.update({ region: "eu-west-2" });
 const ddb = new AWS.DynamoDB.DocumentClient();
 
-const getService: Handler = async () => {
-  console.log("Hello getService");
-
+AWS.config.update({ region: "eu-west-2" });
+const getItem = async (key: string) => {
   const params = {
     TableName: "eurofins-monitor-results",
     Key: {
-      ORCHARD_KEY: "AMOS",
+      ORCHARD_KEY: key,
     },
   };
-  console.log(ddb, params);
-  await ddb
+  return ddb
     .get(params)
     .promise()
-    .then((data) => console.log(data.Item))
-    .catch(console.error);
+    .then((res) => res.Item)
+    .catch((err) => err);
+};
+
+const getService: Handler = async (event) => {
+  const res: any = await getItem(event.key);
+  const { fieldName } = event;
+  return { [fieldName]: res[fieldName] };
 };
 
 export { getService };
