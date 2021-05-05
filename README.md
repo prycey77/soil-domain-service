@@ -21,9 +21,8 @@ Here is a list of all directories and files contained in this repository and bri
 - [`src/`](src/) &mdash; contains the source TypeScript files (including tests).
 - [`deploy/`](deploy/) &mdash; folder containing Pulumi component(s) that deploy the code to the cloud and create associated resources which the service owns. This may include API Gateways, S3 Buckets, App Sync APIs or DynamoDB Tables.
 - [`.eslintignore`](.eslintignore) &mdash; lists the files and directories that should be ignored by ESLint.
-- [`.eslintrc.json`](.eslintrc.json) &mdash; defines the rules used by ESLint for linting.
+- [`.eslintrc.json`](.eslintrc.json) &mdash; defines the rules used by ESLint and Prettier for linting.
 - [`.gitignore`](.gitignore) &mdash; lists the files and directories that should be ignored and not committed by Git.
-- [`.prettierignore`](.gitignore) &mdash; lists the files and directories that should be ignored by the Prettier plugin for ESLint.
 - [`.prettierrc.js`](.prettierrc.js) &mdash; defines the rules used by the Prettier plugin for ESLint.
 - [`README.md`](README.md) &mdash; contains written information about the repository, including how to run and deploy any contained code.
 - [`package.json`](package.json), [`src/package.json`](src/package.json), [`deploy/package.json`](deploy/package.json)  &mdash; lists the minimum version of the project dependencies. Also defines the project description, author and license information, and the scripts to run via `npm`.
