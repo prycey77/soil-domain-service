@@ -26,7 +26,6 @@ const saveSoilSample: S3Handler = async (event) => {
     if (data instanceof Array) {
       const lineCount = data.length;
       const bytesPerLine = s3Meta.ContentLength / lineCount;
-      console.log("::::", lineCount, bytesPerLine);
       if (bytesPerLine > 1000) {
         throw new Error("Something looks wrong with this data");
       }

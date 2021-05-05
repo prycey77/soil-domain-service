@@ -3,7 +3,7 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: {service: "./src/service.ts", getService: "./src/getService.ts"},
+  entry: { service: "./src/service.ts", getService: "./src/getService.ts" },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
