@@ -1,7 +1,7 @@
 import fs from "fs";
 import { isJsonObject } from "./lib/jsonHelper";
 
-import { xlsxToJson, csvToJson } from "./converter";
+import { cleanAndConvertCsv, NUM_HEADER_ROWS } from "./converter";
 
 const dummyData = (file: fs.PathLike) => {
   try {
@@ -11,29 +11,21 @@ const dummyData = (file: fs.PathLike) => {
     return err;
   }
 };
-describe("convertXlsxToJson", () => {
-  test("S3 object is converted to json from xlsx", async () => {
-    const data = await dummyData("./src/lib/test.xlsx");
-    const res: any = await xlsxToJson({ Body: data });
-    const resIsJson = isJsonObject(res);
-    expect(resIsJson).toEqual(true);
 
-    expect(res[0].ORCHARD_KEY).toEqual("25ACRBLACK");
-  });
-  test("error thrown if S3 object is not xlsx", async () => {
-    const data = await dummyData("./src/lib/test.txt");
-    const res: any = await xlsxToJson({ Body: data });
-    const resIsJson = isJsonObject(res);
-    expect(resIsJson).toEqual(false);
-  });
-});
 describe("converCsvToJson", () => {
   test("S3 object is converted to json from csv", async () => {
-    const data = await dummyData("./src/lib/test.csv");
-    const res: any = await csvToJson({ Body: data });
+    const data = await dummyData("./src/lib/Eurofins_with_OrchardID.csv");
+    const res: any = await cleanAndConvertCsv({ Body: data });
     const resIsJson = isJsonObject(res);
     expect(resIsJson).toEqual(true);
+    expect(res[0].orchardId).toEqual("25ACRBLACK");
+  });
+  test("returns the correct number of items", async () => {
+    const data = await dummyData("./src/lib/Eurofins_with_OrchardID.csv");
+    const res: any = await cleanAndConvertCsv({ Body: data });
 
-    expect(res[0].ORCHARD_KEY).toEqual("25ACRBLACK");
+    const numberOfLines = data.toString().split("\n").length - NUM_HEADER_ROWS;
+
+    expect(res.length).toEqual(numberOfLines);
   });
 });
