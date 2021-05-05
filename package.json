@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "A template for LOOOP service repositories",
   "scripts": {
-    "lint": "eslint . --ext ts,tsx && npx prettier -c '**/*.(js|json)'",
-    "prettier": "npx prettier -w '**/*.(js|json)'",
+    "lint": "eslint . --ext ts,tsx && npm run prettier",
+    "prettier": "npx prettier --ignore-path .eslintignore -w '**/*.(js|json)'",
     "init-template": "./bin/init-template.sh",
     "init": "./bin/init.sh"
   },
