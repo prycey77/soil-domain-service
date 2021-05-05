@@ -1,0 +1,12 @@
+{
+  "type": "object",
+
+  "required": ["ORCHARD_KEY"],
+  "properties": {
+    "Sample_description": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 25
+    }
+  }
+}
