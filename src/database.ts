@@ -36,8 +36,5 @@ const saveItems = async (rawItems: any) => {
     }
   }
 };
-const deleteItems = (data: any) => {
-  console.log("data", data);
-};
 
-export { saveItems, deleteItems };
+export { saveItems };
