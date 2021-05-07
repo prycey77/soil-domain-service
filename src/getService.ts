@@ -1,28 +1,25 @@
 import { Handler } from "aws-lambda";
+import { getItemsFromDdb } from "./getItems";
 
-import AWS from "aws-sdk";
+const getService: Handler = async (event: any) => {
+  let data: any;
+  try {
+    data = await getItemsFromDdb(event);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(e);
+  }
+  if (!data) {
+    throw new Error("Data not defined");
+  }
+  let item;
+  if (data.Items.length > 1) {
+    item = data.Items.reduce((prev: any, current: any) =>
+      +prev.timeStamp > +current.timeStamp ? prev : current
+    );
+  }
 
-const ddb = new AWS.DynamoDB.DocumentClient();
-
-AWS.config.update({ region: "eu-west-2" });
-const getItem = async (key: string) => {
-  const params = {
-    TableName: "eurofins-monitor-results",
-    Key: {
-      ORCHARD_KEY: key,
-    },
-  };
-  return ddb
-    .get(params)
-    .promise()
-    .then((res) => res.Item)
-    .catch((err) => err);
-};
-
-const getService: Handler = async (event) => {
-  const res: any = await getItem(event.key);
-  const { fieldName } = event;
-  return { [fieldName]: res[fieldName] };
+  return item;
 };
 
 export { getService };

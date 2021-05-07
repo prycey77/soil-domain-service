@@ -1,6 +1,6 @@
 import { S3Handler } from "aws-lambda";
 import path from "path";
-import { saveItems } from "./database";
+import { saveItems, deleteItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
 import { cleanAndConvertCsv } from "./converter";
 
@@ -50,6 +50,7 @@ const saveSoilSample: S3Handler = async (event) => {
     } else {
       throw new Error("Something went wrong");
     }
+    deleteItems(dataJson);
     await saveItems(dataJson);
     // eslint-disable-next-line no-console
     console.log("Success!");

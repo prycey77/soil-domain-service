@@ -1,13 +1,13 @@
 import AWS from "aws-sdk";
 
 const tableName = "eurofins-monitor-results";
+const dynamo = new AWS.DynamoDB.DocumentClient();
 // if (typeof process.env.TABLE_NAME === "undefined") {
 //   throw new Error("Table name is not defined");
 // }
 // const tableName: string = process.env.TABLE_NAME;
 
 const saveItems = async (rawItems: any) => {
-  const dynamo = new AWS.DynamoDB.DocumentClient();
   let position = 0;
   while (position < rawItems.length) {
     // eslint-disable-next-line no-console
@@ -36,5 +36,8 @@ const saveItems = async (rawItems: any) => {
     }
   }
 };
+const deleteItems = (data: any) => {
+  console.log("data", data);
+};
 
-export { saveItems };
+export { saveItems, deleteItems };

@@ -19,8 +19,9 @@ const cleanAndConvertCsv = (csvString: any) => {
       data.push({
         id: uuidv4(),
         orchardId: row[ORCHARD_ID],
+        uploadTimeStamp: Date.now(),
         analysisProvider: row[PROVIDER],
-        sampleDate: "12/12/2020",
+        sampleDate: "01/01/2021",
         soilType: row[SOIL_TYPE],
         moisture: row[MOISTURE],
         COrganicSoc: row[C_ORGANIC_SOC],
@@ -28,7 +29,6 @@ const cleanAndConvertCsv = (csvString: any) => {
       });
     }
   }
-
   return data;
 };
 
