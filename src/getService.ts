@@ -17,6 +17,8 @@ const getService: Handler = async (event: any) => {
     item = data.Items.reduce((prev: any, current: any) =>
       +prev.timeStamp > +current.timeStamp ? prev : current
     );
+  } else {
+    [item] = data.Items;
   }
 
   return item;
