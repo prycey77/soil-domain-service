@@ -1,11 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
-const ORCHARD_ID = 0;
-const PROVIDER = 4;
-const SOIL_TYPE = 13;
-const MOISTURE = 20;
-const C_ORGANIC_SOC = 222;
-const DENSITY = 247;
+import * as constants from "./lib/constants";
 
 const NUM_HEADER_ROWS = 1;
 
@@ -15,17 +9,22 @@ const cleanAndConvertCsv = (csvString: any) => {
 
   for (let i = NUM_HEADER_ROWS; i < splitData.length; i += 1) {
     if (splitData[i] !== undefined) {
-      const row = splitData[i].split(",");
+      const rows = splitData[i].split(",");
       data.push({
         id: uuidv4(),
-        orchardId: row[ORCHARD_ID],
+        orchardId: rows[constants.ORCHARD_ID],
         uploadTimeStamp: Date.now(),
-        analysisProvider: row[PROVIDER],
+        nitrogenAvailable: rows[constants.NITROGEN_AVAILABLE],
+        ph: rows[constants.PH],
+        carbonateLime: rows[constants.CARBONATE_LIME],
+        organicMatter: rows[constants.ORGANIC_MATTER],
+        microbialAvtivity: rows[constants.MICROBIAL_ACTIVITY],
+        analysisProvider: rows[constants.PROVIDER],
         sampleDate: "01/01/2021",
-        soilType: row[SOIL_TYPE],
-        moisture: row[MOISTURE],
-        COrganicSoc: row[C_ORGANIC_SOC],
-        SoilDensity: row[DENSITY],
+        soilType: rows[constants.SOIL_TYPE],
+        moisture: rows[constants.MOISTURE],
+        cOrganicSoc: rows[constants.C_ORGANIC_SOC],
+        soilDensity: rows[constants.DENSITY],
       });
     }
   }

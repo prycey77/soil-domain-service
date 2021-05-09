@@ -10,8 +10,8 @@ const getItemsFromDdb = async (event: any) => {
     TableName: table,
     IndexName: "orchardId-sampleDate-index",
     ExpressionAttributeValues: {
-      ":orchard_id": event.orchardId,
-      ":sample_date": event.sampleDate,
+      ":orchard_id": event.arguments.orchardId,
+      ":sample_date": event.arguments.sampleDate,
     },
     KeyConditionExpression: "orchardId = :orchard_id and sampleDate = :sample_date",
   };
