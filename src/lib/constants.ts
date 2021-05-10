@@ -5,6 +5,7 @@ export const SAMPLE_DATE = "01/01/2021";
 
 export const PROVIDER = 4;
 export const SOIL_TYPE = 13;
+export const BEM_DIEPTE_HG = 17;
 export const MOISTURE = 20;
 export const NITROGEN_STOCK = 26;
 export const CARBON_NITROGEN_RATIO = 28;
