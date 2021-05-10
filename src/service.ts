@@ -2,7 +2,7 @@ import { S3Handler, Handler } from "aws-lambda";
 import path from "path";
 import { saveItems, getItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
-import { cleanAndConvertCsv } from "./converter";
+import { cleanAndConvertCsv } from "./samplesCsvToJSON";
 
 const maxFileSize = 500000;
 const primaryKey: string = "id";

@@ -20,7 +20,7 @@ const cleanAndConvertCsv = (csvString: any) => {
         organicMatter: rows[constants.ORGANIC_MATTER],
         microbialAvtivity: rows[constants.MICROBIAL_ACTIVITY],
         analysisProvider: rows[constants.PROVIDER],
-        sampleDate: "01/01/2021",
+        sampleDate: constants.SAMPLE_DATE,
         soilType: rows[constants.SOIL_TYPE],
         moisture: rows[constants.MOISTURE],
         soilOrganicContent: rows[constants.SOIL_ORGANIC_CONTENT],

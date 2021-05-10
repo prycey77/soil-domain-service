@@ -1,12 +1,12 @@
 /* eslint-disable import/first */
 
 const mockGetItems = jest.fn();
+const mockSaveItems = jest.fn();
 
 import { Context } from "aws-lambda";
 import { saveSoilSample, getSoilSample } from "./service";
-import { saveItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
-import { cleanAndConvertCsv } from "./converter";
+import { cleanAndConvertCsv } from "./samplesCsvToJSON";
 import { event } from "./lib/triggerTemplate";
 import { headResponse } from "./lib/headResponseTemplate";
 
@@ -18,11 +18,13 @@ function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunc
 const emptyContext: Context = {} as any;
 
 jest.mock("./objectStore");
-jest.mock("./converter");
-jest.mock("./database");
+jest.mock("./samplesCsvToJSON");
+jest.mock("./database", () => ({
+  getItems: mockGetItems,
+  saveItems: mockSaveItems,
+}));
 
 const getS3ObjectMock = mockFunction(getS3Object);
-const saveItemsMock = mockFunction(saveItems);
 const cleanAndConvertCsvMock: any = mockFunction(cleanAndConvertCsv);
 const headObjectMock: any = mockFunction(headObject);
 
@@ -45,7 +47,7 @@ describe("Soil Domain service tests", () => {
   test("saveSoilSample called with incorrect filetype", async () => {
     await saveSoilSample(event("test.txt"), emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
   });
   test("Throws error on Database error", async () => {
     const databaseError = new Error("database");
@@ -56,7 +58,7 @@ describe("Soil Domain service tests", () => {
     } catch (error) {
       thrownError = error;
     }
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
     expect(thrownError).toBe(databaseError);
   });
   test("cleanAndConvertCsv is called on .csv event", async () => {
@@ -71,7 +73,7 @@ describe("Soil Domain service tests", () => {
     await saveSoilSample(event("test.csv"), emptyContext, () => {});
     expect(cleanAndConvertCsvMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
-    expect(saveItemsMock).toBeCalled();
+    expect(mockSaveItems).toBeCalled();
   });
 
   test("throws error bytes per line is too large", async () => {
@@ -87,14 +89,10 @@ describe("Soil Domain service tests", () => {
     } catch (error) {
       thrownError = error;
     }
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
     expect(thrownError).toStrictEqual(dataError);
   });
 });
-
-jest.mock("./database", () => ({
-  getItems: mockGetItems,
-}));
 
 const payload = {
   Items: [
