@@ -67,7 +67,7 @@ const getSoilSample: Handler = async (event: any) => {
     // eslint-disable-next-line no-console
     console.log(e);
   }
-  if (!data) {
+  if (!data.Items || data.Items.length === 0) {
     throw new Error("Data not defined");
   }
   let item;

@@ -101,7 +101,7 @@ const payload = {
   ],
 };
 
-describe("get service tests", () => {
+describe("get soil data tests", () => {
   const testEvent = {};
   test("getItems receives object from getSoilSample", async () => {
     mockGetItems.mockReturnValue(payload);
@@ -136,6 +136,19 @@ describe("get service tests", () => {
       randomData: "300",
       timeStamp: "2000",
     });
+  });
+  test("returns error if no results are found", async () => {
+    mockGetItems.mockReturnValue({
+      Items: [],
+    });
+    const getDataError = new Error("Data not defined");
+    let thrownError = new Error("something");
+    try {
+      await getSoilSample(event, emptyContext, () => {});
+    } catch (error) {
+      thrownError = error;
+    }
+    expect(thrownError).toStrictEqual(getDataError);
   });
 });
 
