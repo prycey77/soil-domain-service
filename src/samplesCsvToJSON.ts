@@ -13,7 +13,7 @@ const cleanAndConvertCsv = (csvString: any) => {
       data.push({
         id: uuidv4(),
         uploadTimeStamp: Date.now(),
-        orchardKey: rows[constants.ORCHARD_ID],
+        orchardId: rows[constants.ORCHARD_ID],
         sampleDate: constants.SAMPLE_DATE,
         analysisProvider: rows[constants.PROVIDER],
         soilType: rows[constants.SOIL_TYPE],
