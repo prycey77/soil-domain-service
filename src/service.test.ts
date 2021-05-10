@@ -1,5 +1,9 @@
+/* eslint-disable import/first */
+
+const mockGetItems = jest.fn();
+
 import { Context } from "aws-lambda";
-import { saveSoilSample } from "./service";
+import { saveSoilSample, getSoilSample } from "./service";
 import { saveItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
 import { cleanAndConvertCsv } from "./converter";
@@ -87,4 +91,54 @@ describe("Soil Domain service tests", () => {
     expect(thrownError).toStrictEqual(dataError);
   });
 });
+
+jest.mock("./database", () => ({
+  getItems: mockGetItems,
+}));
+
+const payload = {
+  Items: [
+    { orchardId: "AMOS", sampleDate: "12/12/2020", randomData: "1.2", timeStamp: "1000" },
+    { orchardId: "AMOS", sampleDate: "12/12/2020", randomData: "300", timeStamp: "2000" },
+  ],
+};
+
+describe("get service tests", () => {
+  const testEvent = {};
+  test("getItems receives object from getSoilSample", async () => {
+    mockGetItems.mockReturnValue(payload);
+    const res = await getSoilSample(event, emptyContext, () => {});
+    expect(res).toBeInstanceOf(Object);
+  });
+  test("newest record returned if duplicates exist", async () => {
+    mockGetItems.mockReturnValue(payload);
+    const res = await getSoilSample(testEvent, emptyContext, () => {});
+    expect(res).toEqual({
+      orchardId: "AMOS",
+      sampleDate: "12/12/2020",
+      randomData: "300",
+      timeStamp: "2000",
+    });
+  });
+  test("returns record if only 1 exists", async () => {
+    mockGetItems.mockReturnValue({
+      Items: [
+        {
+          orchardId: "AMOS",
+          sampleDate: "12/12/2020",
+          randomData: "300",
+          timeStamp: "2000",
+        },
+      ],
+    });
+    const res = await getSoilSample(event, emptyContext, () => {});
+    expect(res).toEqual({
+      orchardId: "AMOS",
+      sampleDate: "12/12/2020",
+      randomData: "300",
+      timeStamp: "2000",
+    });
+  });
+});
+
 export {};

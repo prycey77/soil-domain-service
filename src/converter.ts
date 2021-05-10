@@ -14,7 +14,7 @@ const cleanAndConvertCsv = (csvString: any) => {
         id: uuidv4(),
         orchardId: rows[constants.ORCHARD_ID],
         uploadTimeStamp: Date.now(),
-        nitrogenAvailable: rows[constants.NITROGEN_AVAILABLE],
+        nitrogenSupplyingCapacity: rows[constants.NITROGEN_SUPPLYING_CAPACITY],
         ph: rows[constants.PH],
         carbonateLime: rows[constants.CARBONATE_LIME],
         organicMatter: rows[constants.ORGANIC_MATTER],
@@ -23,8 +23,8 @@ const cleanAndConvertCsv = (csvString: any) => {
         sampleDate: "01/01/2021",
         soilType: rows[constants.SOIL_TYPE],
         moisture: rows[constants.MOISTURE],
-        cOrganicSoc: rows[constants.C_ORGANIC_SOC],
-        soilDensity: rows[constants.DENSITY],
+        soilOrganicContent: rows[constants.SOIL_ORGANIC_CONTENT],
+        soilDensity: rows[constants.SOIL_DENSITY],
       });
     }
   }
