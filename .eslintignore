@@ -1,3 +1,5 @@
-/node_modules
-/.webpackCache
-webpack.config.js
+**/node_modules
+**/dist
+**/.vscode
+**/build
+.webpackCache
