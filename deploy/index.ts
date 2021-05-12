@@ -6,17 +6,18 @@ import { ComponentResource, Output, ResourceOptions } from "@pulumi/pulumi";
 import { Tags } from "@pulumi/aws";
 import { getSoilSample } from "@bx-looop/soil-domain-service-runtime";
 import { buildTags } from "./lib";
+import { tableName } from "../src/database";
 
-type SoilSampleServiceProps = {
+type SoilDomainServiceProps = {
   lambdaExcludePackages?: string[];
   tags?: Tags;
 };
 
-export class SoilSampleService extends ComponentResource {
+export class SoilDomainService extends ComponentResource {
   readonly lambdaArn: Output<string>;
 
-  constructor(name: string, args: SoilSampleServiceProps, opts?: ResourceOptions) {
-    super("bx:components:SoilSampleService", name, args, opts);
+  constructor(name: string, args: SoilDomainServiceProps, opts?: ResourceOptions) {
+    super("bx:components:SoilDomainService", name, args, opts);
     const { lambdaExcludePackages = [], tags: tagArg = {} } = args;
 
     const tags = buildTags(tagArg);
@@ -38,13 +39,8 @@ export class SoilSampleService extends ComponentResource {
           extraExcludePackages,
         },
         description: `getSoilSample handler for ${name}`,
-        environment: {
-          variables: {
-            VAR_1: "value",
-          },
-        },
         memorySize: 128,
-        runtime: Runtime.NodeJS12dX,
+        runtime: Runtime.NodeJS14dX,
         tags,
         timeout: 5,
       },

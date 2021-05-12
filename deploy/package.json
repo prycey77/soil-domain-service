@@ -3,8 +3,11 @@
   "version": "1.1.0",
   "description": "A template for LOOOP service repositories",
   "scripts": {
-    "build": "tsc && cp ../.npmignore dist/",
-    "postversion": "cp -r package.json .. && node ../../bin/post-version.js"
+    "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
+    "postversion": "cp -r package.json .. && node ../../bin/post-version.js",
+    "local:install": "rm -rf node_modules && rm package-lock.json && rm -rf /tmp/empty-cache && npm install --cache /tmp/empty-cache",
+    "local:publish-config": "sed -i '' -e 's/s:\\/\\/npm.pkg.github.com/:\\/\\/localhost:4873/g' dist/package.json",
+    "local:publish": "npm run build && npm run local:publish-config && cd dist && node ../../bin/post-version.js && npm unpublish --force && npm publish"
   },
   "repository": {
     "type": "git",

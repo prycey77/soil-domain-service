@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
   "devDependencies": {
     "@semantic-release/git": "^9.0.0",
+    "@tsconfig/node14": "^1.0.0",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.41",
     "@typescript-eslint/eslint-plugin": "^4.22.0",

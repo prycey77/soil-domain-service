@@ -1,22 +1,8 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "esModuleInterop": true,
-    "declaration": true,
-    "outDir": "dist",
-    "noEmit": false,
-    "target": "es2019",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "pretty": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "outDir": "dist"
   },
-  "types": [],
   "include": ["**/*.ts"],
-  "exclude": ["../node_modules", "node_modules", ".vscode", "dist"]
+  "exclude": ["node_modules", ".vscode", "dist"]
 }

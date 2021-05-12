@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-const tableName = "eurofins-monitor-results";
+export const tableName = "eurofins-monitor-results";
 const dynamo = new AWS.DynamoDB.DocumentClient();
 // if (typeof process.env.TABLE_NAME === "undefined") {
 //   throw new Error("Table name is not defined");

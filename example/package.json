@@ -1,0 +1,15 @@
+{
+    "name": "soil-domain-service-example",
+    "scripts": {
+        "local:install": "rm -rf node_modules && rm -f package-lock.json && rm -rf /tmp/empty-cache && npm --cache /tmp/empty-cache install"
+    },
+    "devDependencies": {
+        "@types/node": "^10.0.0"
+    },
+    "dependencies": {
+        "@bx-looop/soil-domain-service": "^1.1.0",
+        "@pulumi/aws": "^4.0.0",
+        "@pulumi/awsx": "^0.30.0",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}
