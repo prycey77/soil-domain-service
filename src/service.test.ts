@@ -1,8 +1,12 @@
+/* eslint-disable import/first */
+
+const mockGetItems = jest.fn();
+const mockSaveItems = jest.fn();
+
 import { Context } from "aws-lambda";
-import { saveSoilSample } from "./service";
-import { saveItems } from "./database";
+import { saveSoilSample, getSoilSample } from "./service";
 import { getS3Object, headObject } from "./objectStore";
-import { cleanAndConvertCsv } from "./converter";
+import { cleanAndConvertCsv } from "./samplesCsvToJSON";
 import { event } from "./lib/triggerTemplate";
 import { headResponse } from "./lib/headResponseTemplate";
 
@@ -14,11 +18,13 @@ function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunc
 const emptyContext: Context = {} as any;
 
 jest.mock("./objectStore");
-jest.mock("./converter");
-jest.mock("./database");
+jest.mock("./samplesCsvToJSON");
+jest.mock("./database", () => ({
+  getItems: mockGetItems,
+  saveItems: mockSaveItems,
+}));
 
 const getS3ObjectMock = mockFunction(getS3Object);
-const saveItemsMock = mockFunction(saveItems);
 const cleanAndConvertCsvMock: any = mockFunction(cleanAndConvertCsv);
 const headObjectMock: any = mockFunction(headObject);
 
@@ -41,7 +47,7 @@ describe("Soil Domain service tests", () => {
   test("saveSoilSample called with incorrect filetype", async () => {
     await saveSoilSample(event("test.txt"), emptyContext, () => {});
     expect(getS3ObjectMock).toBeCalled();
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
   });
   test("Throws error on Database error", async () => {
     const databaseError = new Error("database");
@@ -52,7 +58,7 @@ describe("Soil Domain service tests", () => {
     } catch (error) {
       thrownError = error;
     }
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
     expect(thrownError).toBe(databaseError);
   });
   test("cleanAndConvertCsv is called on .csv event", async () => {
@@ -67,7 +73,7 @@ describe("Soil Domain service tests", () => {
     await saveSoilSample(event("test.csv"), emptyContext, () => {});
     expect(cleanAndConvertCsvMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
-    expect(saveItemsMock).toBeCalled();
+    expect(mockSaveItems).toBeCalled();
   });
 
   test("throws error bytes per line is too large", async () => {
@@ -83,8 +89,67 @@ describe("Soil Domain service tests", () => {
     } catch (error) {
       thrownError = error;
     }
-    expect(saveItemsMock).not.toBeCalled();
+    expect(mockSaveItems).not.toBeCalled();
     expect(thrownError).toStrictEqual(dataError);
   });
 });
+
+const payload = {
+  Items: [
+    { orchardId: "AMOS", sampleDate: "12/12/2020", randomData: "1.2", timeStamp: "1000" },
+    { orchardId: "AMOS", sampleDate: "12/12/2020", randomData: "300", timeStamp: "2000" },
+  ],
+};
+
+describe("get soil data tests", () => {
+  const testEvent = {};
+  test("getItems receives object from getSoilSample", async () => {
+    mockGetItems.mockReturnValue(payload);
+    const res = await getSoilSample(event, emptyContext, () => {});
+    expect(res).toBeInstanceOf(Object);
+  });
+  test("newest record returned if duplicates exist", async () => {
+    mockGetItems.mockReturnValue(payload);
+    const res = await getSoilSample(testEvent, emptyContext, () => {});
+    expect(res).toEqual({
+      orchardId: "AMOS",
+      sampleDate: "12/12/2020",
+      randomData: "300",
+      timeStamp: "2000",
+    });
+  });
+  test("returns record if only 1 exists", async () => {
+    mockGetItems.mockReturnValue({
+      Items: [
+        {
+          orchardId: "AMOS",
+          sampleDate: "12/12/2020",
+          randomData: "300",
+          timeStamp: "2000",
+        },
+      ],
+    });
+    const res = await getSoilSample(event, emptyContext, () => {});
+    expect(res).toEqual({
+      orchardId: "AMOS",
+      sampleDate: "12/12/2020",
+      randomData: "300",
+      timeStamp: "2000",
+    });
+  });
+  test("returns error if no results are found", async () => {
+    mockGetItems.mockReturnValue({
+      Items: [],
+    });
+    const getDataError = new Error("Data not defined");
+    let thrownError = new Error("something");
+    try {
+      await getSoilSample(event, emptyContext, () => {});
+    } catch (error) {
+      thrownError = error;
+    }
+    expect(thrownError).toStrictEqual(getDataError);
+  });
+});
+
 export {};

@@ -1,8 +1,8 @@
-import { S3Handler } from "aws-lambda";
+import { S3Handler, Handler } from "aws-lambda";
 import path from "path";
-import { saveItems } from "./database";
+import { saveItems, getItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
-import { cleanAndConvertCsv } from "./converter";
+import { cleanAndConvertCsv } from "./samplesCsvToJSON";
 
 const maxFileSize = 500000;
 const primaryKey: string = "id";
@@ -59,4 +59,27 @@ const saveSoilSample: S3Handler = async (event) => {
   }
 };
 
-export { saveSoilSample };
+const getSoilSample: Handler = async (event: any) => {
+  let data: any;
+  try {
+    data = await getItems(event);
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(e);
+  }
+  if (!data.Items || data.Items.length === 0) {
+    throw new Error("Data not defined");
+  }
+  let item;
+  if (data.Items.length > 1) {
+    item = data.Items.reduce((prev: any, current: any) =>
+      +prev.timeStamp > +current.timeStamp ? prev : current
+    );
+  } else {
+    [item] = data.Items;
+  }
+
+  return item;
+};
+
+export { saveSoilSample, getSoilSample };

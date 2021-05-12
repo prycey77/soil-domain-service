@@ -1,13 +1,13 @@
 import AWS from "aws-sdk";
 
 const tableName = "eurofins-monitor-results";
+const dynamo = new AWS.DynamoDB.DocumentClient();
 // if (typeof process.env.TABLE_NAME === "undefined") {
 //   throw new Error("Table name is not defined");
 // }
 // const tableName: string = process.env.TABLE_NAME;
 
 const saveItems = async (rawItems: any) => {
-  const dynamo = new AWS.DynamoDB.DocumentClient();
   let position = 0;
   while (position < rawItems.length) {
     // eslint-disable-next-line no-console
@@ -37,4 +37,20 @@ const saveItems = async (rawItems: any) => {
   }
 };
 
-export { saveItems };
+const getItems = async (event: any) => {
+  const table = "eurofins-monitor-results";
+  const params = {
+    TableName: table,
+    IndexName: "orchardId-sampleDate-index",
+    ExpressionAttributeValues: {
+      ":orchard_id": event.arguments.orchardId,
+      ":sample_date": event.arguments.sampleDate,
+    },
+    KeyConditionExpression: "orchardId = :orchard_id and sampleDate = :sample_date",
+  };
+
+  const data = await dynamo.query(params).promise();
+  return data;
+};
+
+export { saveItems, getItems };

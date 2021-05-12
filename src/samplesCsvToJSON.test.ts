@@ -1,7 +1,7 @@
 import fs from "fs";
 import { isJsonObject } from "./lib/jsonHelper";
 
-import { cleanAndConvertCsv, NUM_HEADER_ROWS } from "./converter";
+import { cleanAndConvertCsv, NUM_HEADER_ROWS } from "./samplesCsvToJSON";
 
 const dummyData = (file: fs.PathLike) => {
   try {
