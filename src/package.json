@@ -1,6 +1,6 @@
 {
   "name": "@bx-looop/soil-domain-service-runtime",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Soil domain service",
   "scripts": {
     "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
