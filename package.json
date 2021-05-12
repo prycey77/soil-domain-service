@@ -2,21 +2,20 @@
   "name": "soil-domain-service",
   "version": "0.1.0",
   "description": "Domain service for soil samples",
+  "author": "Bx",
+  "license": "UNLICENSED",
   "scripts": {
     "lint": "eslint . --ext ts,tsx && npm run prettier",
-    "prettier": "npx prettier --ignore-path .eslintignore -w '**/*.(js|json)'",
+    "prettier": "npx prettier -w '**/*.(js|json)'",
     "init": "./bin/init.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bx-LOOOP/soil-domain-service.git"
+    "url": "https://github.com/Bx-LOOOP/soil-domain-service.git"
   },
-  "author": "Bx",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://bx-looop.atlassian.net/secure/RapidBoard.jspa?projectKey=LOOOP"
+  "engines": {
+    "node": ">14.14"
   },
-  "homepage": "https://github.com/Bx-LOOOP/service-template#readme",
   "devDependencies": {
     "@semantic-release/git": "^9.0.0",
     "@tsconfig/node14": "^1.0.0",
@@ -61,6 +60,12 @@
         }
       ],
       "@semantic-release/github",
+      [
+        "@semantic-release/exec",
+        {
+          "prepareCmd": "npm run prettier"
+        }
+      ],
       [
         "@semantic-release/git",
         {

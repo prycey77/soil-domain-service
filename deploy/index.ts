@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
 import { Runtime } from "@pulumi/aws/lambda";
 import { ComponentResource, Output, ResourceOptions } from "@pulumi/pulumi";
 import { Tags } from "@pulumi/aws";
 import { getSoilSample } from "@bx-looop/soil-domain-service-runtime";
 import { buildTags } from "./lib";
-import { tableName } from "../src/database";
 
 type SoilDomainServiceProps = {
   lambdaExcludePackages?: string[];
