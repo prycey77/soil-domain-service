@@ -1,4 +1,4 @@
-import { S3Handler, Handler } from "aws-lambda";
+import { S3Event } from "aws-lambda";
 import path from "path";
 import { saveItems, getItems } from "./database";
 import { getS3Object, headObject } from "./objectStore";
@@ -8,7 +8,7 @@ const maxFileSize = 500000;
 const primaryKey: string = "id";
 
 // eslint-disable-next-line consistent-return
-const saveSoilSample: S3Handler = async (event) => {
+const saveSoilSample = async (event: S3Event): Promise<void> => {
   const { name: Bucket } = event.Records[0].s3.bucket;
   const { key: Key } = event.Records[0].s3.object;
 
@@ -59,7 +59,7 @@ const saveSoilSample: S3Handler = async (event) => {
   }
 };
 
-const getSoilSample: Handler = async (event: any) => {
+const getSoilSample = async (event: any): Promise<any> => {
   let data: any;
   try {
     data = await getItems(event);

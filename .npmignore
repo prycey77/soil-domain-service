@@ -1,0 +1,4 @@
+**/*.test.js
+**/*.test.json
+**/*.test.js.map
+**/*.test.d.ts

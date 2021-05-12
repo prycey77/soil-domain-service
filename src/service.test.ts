@@ -3,7 +3,6 @@
 const mockGetItems = jest.fn();
 const mockSaveItems = jest.fn();
 
-import { Context } from "aws-lambda";
 import { saveSoilSample, getSoilSample } from "./service";
 import { getS3Object, headObject } from "./objectStore";
 import { cleanAndConvertCsv } from "./samplesCsvToJSON";
@@ -14,8 +13,6 @@ import { headResponse } from "./lib/headResponseTemplate";
 function mockFunction<T extends (...args: any[]) => any>(fn: T): jest.MockedFunction<T> {
   return fn as jest.MockedFunction<T>;
 }
-
-const emptyContext: Context = {} as any;
 
 jest.mock("./objectStore");
 jest.mock("./samplesCsvToJSON");
@@ -38,14 +35,14 @@ describe("Soil Domain service tests", () => {
     const fileError = new Error("file too large");
     let thrownError = new Error("something");
     try {
-      await saveSoilSample(event("test.csv"), emptyContext, () => {});
+      await saveSoilSample(event("test.csv"));
     } catch (error) {
       thrownError = error;
     }
     expect(thrownError).toStrictEqual(fileError);
   });
   test("saveSoilSample called with incorrect filetype", async () => {
-    await saveSoilSample(event("test.txt"), emptyContext, () => {});
+    await saveSoilSample(event("test.txt"));
     expect(getS3ObjectMock).toBeCalled();
     expect(mockSaveItems).not.toBeCalled();
   });
@@ -54,7 +51,7 @@ describe("Soil Domain service tests", () => {
     let thrownError = new Error("something");
     getS3ObjectMock.mockReturnValue(Promise.reject(databaseError));
     try {
-      await saveSoilSample(event("test.csv"), emptyContext, () => {});
+      await saveSoilSample(event("test.csv"));
     } catch (error) {
       thrownError = error;
     }
@@ -62,7 +59,7 @@ describe("Soil Domain service tests", () => {
     expect(thrownError).toBe(databaseError);
   });
   test("cleanAndConvertCsv is called on .csv event", async () => {
-    await saveSoilSample(event("test.csv"), emptyContext, () => {});
+    await saveSoilSample(event("test.csv"));
     expect(cleanAndConvertCsvMock).toBeCalled();
   });
   test("Database is called on save with csv", async () => {
@@ -70,7 +67,7 @@ describe("Soil Domain service tests", () => {
       { id: "345435345", data: "test data" },
       { id: "523423434", data: "sampledata" },
     ]);
-    await saveSoilSample(event("test.csv"), emptyContext, () => {});
+    await saveSoilSample(event("test.csv"));
     expect(cleanAndConvertCsvMock).toBeCalled();
     expect(getS3ObjectMock).toBeCalled();
     expect(mockSaveItems).toBeCalled();
@@ -85,7 +82,7 @@ describe("Soil Domain service tests", () => {
     const dataError = new Error("Something looks wrong with this data");
     let thrownError = new Error("something");
     try {
-      await saveSoilSample(event("test.csv"), emptyContext, () => {});
+      await saveSoilSample(event("test.csv"));
     } catch (error) {
       thrownError = error;
     }
@@ -105,12 +102,12 @@ describe("get soil data tests", () => {
   const testEvent = {};
   test("getItems receives object from getSoilSample", async () => {
     mockGetItems.mockReturnValue(payload);
-    const res = await getSoilSample(event, emptyContext, () => {});
+    const res = await getSoilSample(event);
     expect(res).toBeInstanceOf(Object);
   });
   test("newest record returned if duplicates exist", async () => {
     mockGetItems.mockReturnValue(payload);
-    const res = await getSoilSample(testEvent, emptyContext, () => {});
+    const res = await getSoilSample(testEvent);
     expect(res).toEqual({
       orchardId: "AMOS",
       sampleDate: "12/12/2020",
@@ -129,7 +126,7 @@ describe("get soil data tests", () => {
         },
       ],
     });
-    const res = await getSoilSample(event, emptyContext, () => {});
+    const res = await getSoilSample(event);
     expect(res).toEqual({
       orchardId: "AMOS",
       sampleDate: "12/12/2020",
@@ -144,7 +141,7 @@ describe("get soil data tests", () => {
     const getDataError = new Error("Data not defined");
     let thrownError = new Error("something");
     try {
-      await getSoilSample(event, emptyContext, () => {});
+      await getSoilSample(event);
     } catch (error) {
       thrownError = error;
     }
