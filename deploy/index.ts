@@ -1,22 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as aws from "@pulumi/aws";
-import * as awsx from "@pulumi/awsx";
 import { Runtime } from "@pulumi/aws/lambda";
 import { ComponentResource, Output, ResourceOptions } from "@pulumi/pulumi";
 import { Tags } from "@pulumi/aws";
-import { getSoilSample } from "@bx-looop/soil-domain-service-runtime";
+import { getSoilSample, saveSoilSample } from "@bx-looop/soil-domain-service-runtime";
 import { buildTags } from "./lib";
 
-type SoilSampleServiceProps = {
+type SoilDomainServiceProps = {
   lambdaExcludePackages?: string[];
   tags?: Tags;
 };
 
-export class SoilSampleService extends ComponentResource {
+export class SoilDomainService extends ComponentResource {
   readonly lambdaArn: Output<string>;
 
-  constructor(name: string, args: SoilSampleServiceProps, opts?: ResourceOptions) {
-    super("bx:components:SoilSampleService", name, args, opts);
+  readonly bucketName: Output<string>;
+
+  readonly tableName: Output<string>;
+
+  constructor(name: string, args: SoilDomainServiceProps, opts?: ResourceOptions) {
+    super("bx:components:SoilDomainService", name, args, opts);
     const { lambdaExcludePackages = [], tags: tagArg = {} } = args;
 
     const tags = buildTags(tagArg);
@@ -28,8 +31,42 @@ export class SoilSampleService extends ComponentResource {
     // it refers to the imported library function and does not duplicate the function body
     type CallBackParameters = Parameters<typeof getSoilSample>;
 
-    const callbackFunction = new aws.lambda.CallbackFunction(
-      "lambdaFunction",
+    const dynamoTable = new aws.dynamodb.Table("soilSample", {
+      attributes: [
+        {
+          name: "id",
+          type: "S",
+        },
+        {
+          name: "orchardId",
+          type: "S",
+        },
+        {
+          name: "sampleDate",
+          type: "S",
+        },
+      ],
+      billingMode: "PROVISIONED",
+      globalSecondaryIndexes: [
+        {
+          hashKey: "orchardId",
+          name: "orchardId-sampleDate-index",
+          nonKeyAttributes: ["id"],
+          projectionType: "INCLUDE",
+          rangeKey: "sampleDate",
+          readCapacity: 2,
+          writeCapacity: 2,
+        },
+      ],
+      hashKey: "id",
+      rangeKey: "orchardId",
+      readCapacity: 2,
+      tags: {},
+      writeCapacity: 2,
+    });
+
+    const getSoilSampleLambda = new aws.lambda.CallbackFunction(
+      "getSoilSample",
       {
         callback: (e: CallBackParameters[0]) => {
           return getSoilSample(e);
@@ -37,21 +74,52 @@ export class SoilSampleService extends ComponentResource {
         codePathOptions: {
           extraExcludePackages,
         },
-        description: `getSoilSample handler for ${name}`,
         environment: {
           variables: {
-            VAR_1: "value",
+            SOIL_SAMPLE_TABLE: dynamoTable.name,
           },
         },
+        description: `getSoilSample handler for ${name}`,
         memorySize: 128,
-        runtime: Runtime.NodeJS12dX,
+        runtime: Runtime.NodeJS14dX,
         tags,
         timeout: 5,
       },
       { parent: this }
     );
 
-    this.lambdaArn = callbackFunction.arn;
+    const s3Bucket = new aws.s3.Bucket("eurofinsData", {
+      acl: "private",
+    });
+
+    const saveSoilSampleLambda = new aws.lambda.CallbackFunction(
+      "saveSoilSample",
+      {
+        callback: (e: CallBackParameters[0]) => {
+          return saveSoilSample(e);
+        },
+        codePathOptions: {
+          extraExcludePackages,
+        },
+        environment: {
+          variables: {
+            SOIL_SAMPLE_TABLE: dynamoTable.name,
+          },
+        },
+        description: `getSoilSample handler for ${name}`,
+        memorySize: 128,
+        runtime: Runtime.NodeJS14dX,
+        tags,
+        timeout: 5,
+      },
+      { parent: this }
+    );
+
+    s3Bucket.onObjectCreated("s3ObjectCreated", saveSoilSampleLambda);
+
+    this.bucketName = s3Bucket.bucket;
+    this.tableName = dynamoTable.name;
+    this.lambdaArn = getSoilSampleLambda.arn;
     this.registerOutputs();
   }
 }

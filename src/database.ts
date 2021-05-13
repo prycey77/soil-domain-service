@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-const tableName = "eurofins-monitor-results";
+export const tableName = process.env.SOIL_SAMPLE_TABLE || "eurofins-monitor-results";
 const dynamo = new AWS.DynamoDB.DocumentClient();
 // if (typeof process.env.TABLE_NAME === "undefined") {
 //   throw new Error("Table name is not defined");
@@ -38,9 +38,8 @@ const saveItems = async (rawItems: any) => {
 };
 
 const getItems = async (event: any) => {
-  const table = "eurofins-monitor-results";
   const params = {
-    TableName: table,
+    TableName: tableName,
     IndexName: "orchardId-sampleDate-index",
     ExpressionAttributeValues: {
       ":orchard_id": event.arguments.orchardId,
