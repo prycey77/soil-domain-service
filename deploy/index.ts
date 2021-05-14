@@ -4,6 +4,7 @@ import { Runtime } from "@pulumi/aws/lambda";
 import { ComponentResource, Output, ResourceOptions } from "@pulumi/pulumi";
 import { Tags } from "@pulumi/aws";
 import { getSoilSample, saveSoilSample } from "@bx-looop/soil-domain-service-runtime";
+import { assumeRolePolicyForPrincipal, PolicyDocument, Principals } from "@pulumi/aws/iam";
 import { buildTags } from "./lib";
 
 type SoilDomainServiceProps = {
@@ -31,39 +32,77 @@ export class SoilDomainService extends ComponentResource {
     // it refers to the imported library function and does not duplicate the function body
     type CallBackParameters = Parameters<typeof getSoilSample>;
 
-    const dynamoTable = new aws.dynamodb.Table("soilSample", {
-      attributes: [
+    const indexName = "orchardId-sampleDate-index";
+
+    const dynamoTable = new aws.dynamodb.Table(
+      "soilSample",
+      {
+        attributes: [
+          {
+            name: "id",
+            type: "S",
+          },
+          {
+            name: "orchardId",
+            type: "S",
+          },
+          {
+            name: "sampleDate",
+            type: "S",
+          },
+        ],
+        billingMode: "PROVISIONED",
+        globalSecondaryIndexes: [
+          {
+            hashKey: "orchardId",
+            name: indexName,
+            nonKeyAttributes: ["id"],
+            projectionType: "INCLUDE",
+            rangeKey: "sampleDate",
+            readCapacity: 2,
+            writeCapacity: 2,
+          },
+        ],
+        hashKey: "id",
+        rangeKey: "orchardId",
+        readCapacity: 2,
+        tags: {},
+        writeCapacity: 2,
+      },
+      {
+        parent: this,
+        aliases: [{ parent: opts?.parent }],
+      }
+    );
+
+    const getSoilSampleRole = new aws.iam.Role(
+      "getSoilSample",
+      {
+        assumeRolePolicy: assumeRolePolicyForPrincipal(Principals.LambdaPrincipal),
+        tags,
+      },
+      { parent: this }
+    );
+
+    const getSoilSamplePolicy: PolicyDocument = {
+      Version: "2012-10-17",
+      Statement: [
         {
-          name: "id",
-          type: "S",
-        },
-        {
-          name: "orchardId",
-          type: "S",
-        },
-        {
-          name: "sampleDate",
-          type: "S",
+          Effect: "Allow",
+          Action: ["dynamodb:Query"],
+          Resource: [dynamoTable.arn, dynamoTable.arn.apply((arn) => `${arn}/index/${indexName}`)],
         },
       ],
-      billingMode: "PROVISIONED",
-      globalSecondaryIndexes: [
-        {
-          hashKey: "orchardId",
-          name: "orchardId-sampleDate-index",
-          nonKeyAttributes: ["id"],
-          projectionType: "INCLUDE",
-          rangeKey: "sampleDate",
-          readCapacity: 2,
-          writeCapacity: 2,
-        },
-      ],
-      hashKey: "id",
-      rangeKey: "orchardId",
-      readCapacity: 2,
-      tags: {},
-      writeCapacity: 2,
-    });
+    };
+
+    const getSoilSampleRolePolicy = new aws.iam.RolePolicy(
+      "getSoilSample",
+      {
+        role: getSoilSampleRole,
+        policy: getSoilSamplePolicy,
+      },
+      { parent: this }
+    );
 
     const getSoilSampleLambda = new aws.lambda.CallbackFunction(
       "getSoilSample",
@@ -79,6 +118,7 @@ export class SoilDomainService extends ComponentResource {
             SOIL_SAMPLE_TABLE: dynamoTable.name,
           },
         },
+        role: getSoilSampleRole,
         description: `getSoilSample handler for ${name}`,
         memorySize: 128,
         runtime: Runtime.NodeJS14dX,
@@ -88,9 +128,50 @@ export class SoilDomainService extends ComponentResource {
       { parent: this }
     );
 
-    const s3Bucket = new aws.s3.Bucket("eurofinsData", {
-      acl: "private",
-    });
+    const s3Bucket = new aws.s3.Bucket(
+      "eurofinsData",
+      {
+        acl: "private",
+      },
+      {
+        parent: this,
+        aliases: [{ parent: opts?.parent }],
+      }
+    );
+
+    const saveSoilSampleRole = new aws.iam.Role(
+      "saveSoilSample",
+      {
+        assumeRolePolicy: assumeRolePolicyForPrincipal(Principals.LambdaPrincipal),
+        tags,
+      },
+      { parent: this }
+    );
+
+    const saveSoilSamplePolicy: PolicyDocument = {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Action: ["dynamodb:BatchWriteItem", "dynamodb:DescribeTable"],
+          Resource: [dynamoTable.arn],
+        },
+        {
+          Effect: "Allow",
+          Action: ["s3:GetObject", "s3:HeadObject"],
+          Resource: [s3Bucket.arn.apply((arn) => `${arn}/*`)],
+        },
+      ],
+    };
+
+    const saveSoilSampleRolePolicy = new aws.iam.RolePolicy(
+      "saveSoilSample",
+      {
+        role: saveSoilSampleRole,
+        policy: saveSoilSamplePolicy,
+      },
+      { parent: this }
+    );
 
     const saveSoilSampleLambda = new aws.lambda.CallbackFunction(
       "saveSoilSample",
@@ -106,6 +187,7 @@ export class SoilDomainService extends ComponentResource {
             SOIL_SAMPLE_TABLE: dynamoTable.name,
           },
         },
+        role: saveSoilSampleRole,
         description: `getSoilSample handler for ${name}`,
         memorySize: 128,
         runtime: Runtime.NodeJS14dX,
