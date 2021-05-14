@@ -110,7 +110,7 @@ export class SoilDomainService extends ComponentResource {
         memorySize: 128,
         runtime: Runtime.NodeJS14dX,
         tags,
-        timeout: 5,
+        timeout: 60,
       },
       { parent: this }
     );
