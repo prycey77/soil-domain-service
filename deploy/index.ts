@@ -56,7 +56,6 @@ export class SoilDomainService extends ComponentResource {
           {
             hashKey: "orchardId",
             name: indexName,
-            nonKeyAttributes: ["id"],
             projectionType: "ALL",
             rangeKey: "sampleDate",
             readCapacity: 2,
