@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@bx-looop/soil-domain-service-runtime": "../src/dist",
-    "@pulumi/aws": "^3.38.1",
-    "@pulumi/awsx": "^0.24.0",
-    "@pulumi/pulumi": "^2.25.2"
+    "@pulumi/aws": "^4.5.1",
+    "@pulumi/awsx": "^0.30.0",
+    "@pulumi/pulumi": "^3.3.0"
   },
   "devDependencies": {
     "typescript": "^4.2.4"
