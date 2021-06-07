@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
     "test": "npx jest",
+    "preinstall": "node ../bin/fix-aws-sdk-version.js",
     "postversion": "cp -r package.json ..",
     "local:publish-config": "sed -i '' -e 's/s:\\/\\/npm.pkg.github.com/:\\/\\/localhost:4873/g' dist/package.json",
     "local:publish": "npm run build && npm run local:publish-config && cd dist && npm unpublish --force && npm publish"
@@ -16,13 +17,13 @@
     "url": "https://github.com/Bx-LOOOP/soil-domain-service.git"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.76",
+    "@types/aws-lambda": "^8.10.77",
     "@types/uuid": "^8.3.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.2"
   },
   "dependencies": {
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.912.0",
+    "aws-sdk": "^2.0.0",
     "uuid": "^8.3.2"
   },
   "jest": {
