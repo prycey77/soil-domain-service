@@ -8,7 +8,7 @@ const buffer = fs.readFileSync("package.json");
 
 const json = JSON.parse(buffer.toString());
 const awsSdkDependency = json.dependencies["aws-sdk"];
-if (awsSdkDependency && awsSdkDependency !== "^2.0.0"){
+if (awsSdkDependency && awsSdkDependency !== "^2.0.0") {
   json.dependencies["aws-sdk"] = "^2.0.0";
   fs.writeFileSync("package.json", JSON.stringify(json, null, 2));
 }

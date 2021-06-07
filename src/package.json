@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc && cp ../.npmignore dist/ && cp package.json dist/",
     "test": "npx jest",
-    "preinstall": "node ../bin/fix-aws-sdk-version.js",
+    "prepare": "node ../bin/fix-aws-sdk-version.js",
     "postversion": "cp -r package.json ..",
     "local:publish-config": "sed -i '' -e 's/s:\\/\\/npm.pkg.github.com/:\\/\\/localhost:4873/g' dist/package.json",
     "local:publish": "npm run build && npm run local:publish-config && cd dist && npm unpublish --force && npm publish"
