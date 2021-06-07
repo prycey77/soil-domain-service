@@ -21,6 +21,7 @@
     "@types/uuid": "^8.3.0",
     "typescript": "^4.3.2"
   },
+  "__comment": "aws-sdk version v2.0.0 to prevent it being bundled - do NOT update!",
   "dependencies": {
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.0.0",
