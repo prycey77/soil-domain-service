@@ -34,39 +34,3 @@ You can see packages installed in verdaccio at http://localhost:4873/
 NOTE - you can restore your previous npmrc file (needed to access github packages) by running `npmrc default`
 
 A GitHub Action builds, lints, tests and publishes this service to Github Packages.
-
-## Building
-A GitHub Action builds, lints, tests and publishes this service to Github Packages. It is located here [`main.yml`](.github/workflows/main.yml)
-
-
-## Deployment
-
-Soil Domain Service can be deployed by including the Pulumi component(s) in the GitOps repository for the environment you wish to deploy to.
-
-The component can be added to that environment by running: 
-```sh 
-npm install @bx-looop/soil-domain-service
-```
-
-
-```typescript
-import { SoilDomainService } from "@bx-looop/soil-domain-service";
-
-const service = new SoilDomainService("soil-domain-service", {
-  lambdaExcludePackages: [
-      "@bx-looop/pulumi-components",
-      "@bx-looop/prismic-webhook-runtime",
-      "@bx-looop/provenance-service",
-    ],
-  tags,
-});
-```
-
-Deployed code can be updated by updating the version of the `soil-domain-service` package in the environment's `package.json`
-## Issues
-
-## Monitoring
-
-## Team
-
-## Dependencies
